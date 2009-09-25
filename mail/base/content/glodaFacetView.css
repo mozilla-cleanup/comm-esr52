@@ -1,0 +1,677 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ *   Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Thunderbird Global Database.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla Messaging, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Andrew Sutherland <asutherland@asutherland.org>
+ *   David Ascher <dascher@mozillamessaging.com>
+ *   Bryan Clark <clarkbw@gnome.org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+html {
+  background:white;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background: white;
+}
+
+#table {
+  display: table;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: white;
+}
+
+.facets-sidebar {
+  display: table-cell;
+  width: 20em;
+  background-color: #e0eaf5;
+  padding: 4px;
+  height: 100%;
+  padding-left: 1em;
+  font-size: 90%;
+}
+
+#main-column {
+  padding-left: 1em;
+  display: table-cell;
+}
+
+#header {
+  position: relative;
+  max-width: 40em;
+  display: inline-block;
+}
+
+#data-column {
+  margin-top: 1em;
+  margin-right: 1em;
+  max-width: 40em;
+}
+
+/* ===== Query Explanation ===== */
+
+#query-explanation {
+  display: block;
+  height: 40px;
+  font-size: 140% !important;
+  padding: 2px;
+  padding-left: 0;
+  padding-top: 1em;
+  padding-right: 80px;
+}
+
+.explanation-fulltext-label {
+  color: #3465a4;
+  margin: 0 0.1em;
+}
+
+.explanation-fulltext-term {
+  color: black;
+  margin: 0 0.1em;
+}
+
+.explanation-fulltext-criteria {
+  color: #888;
+  margin: 0 0.1em;
+}
+
+
+.explanation-query-label {
+  margin-top: 1ex;
+}
+
+.explanation-query-label,
+.explanation-query-involves,
+.explanation-query-tagged {
+  color: #3465a4;
+  margin-right: 0.5ex;
+}
+
+/* ===== Facets ===== */
+
+h1, h2, h3 {
+  color: #555753;
+  cursor: default;
+}
+
+#filter-header-label {
+  margin: 0;
+  margin-top: 1em;
+}
+
+.explanation-change-label {
+  display: inline-block;
+  color: black;
+  font-size: 60%;
+  padding: 3px;
+  margin: 0 0.1em;
+  margin-left: 1em;
+  border: 1px solid grey;
+  -moz-border-radius: 4px;
+}
+
+.explanation-change-label:hover {
+  cursor: pointer;
+  background-color: #aed5ff;
+}
+
+.facetious[uninitialized] {
+  display: none;
+}
+
+.facetious {
+  display: list-item; /* take the whole column width */
+  list-style: none;
+  padding: 2px;
+}
+
+h1 {
+  font-size: medium !important;
+  padding-bottom: 0.5em;
+}
+
+h2 {
+  display: block;
+  margin: 0;
+  font-size: 100%;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+h3 {
+  font-weight: 90%;
+}
+
+
+.facet > h3,
+.facet-content > h3 {
+  font-size: 90%;
+  padding-left: 0;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.facet-included-header[state="empty"],
+.facet-excluded-header[state="empty"],
+.facet-remaindered-header[needed="false"] {
+  display: none;
+}
+
+.facet-included-header[state="empty"] + .facet-included,
+.facet-excluded-header[state="empty"] + .facet-excluded,
+.facet-remaindered:empty {
+  display: none;
+}
+
+.facet-excluded > .bar > .bar-link {
+  text-decoration: line-through; /* strike the names of exluded facets */
+}
+
+.date-wrapper {
+  position: relative;
+  height: 80px;
+  display: block;
+  padding: 0px;
+  padding-top: 0.5em;
+  margin-right: 1em;
+  padding-left: 2em;
+  padding-bottom: 1em;
+}
+
+#date-toggle {
+  position: absolute;
+  right: 1em;
+  bottom: 0;
+  margin: 5px;
+  font-size: 90%;
+  text-align: right;
+  display: inline-block;
+  width: 46px !important;
+  height: 17px !important;
+  margin-right: 2px;
+  margin-top: 2px;
+  padding: 4px;
+  background-image: url("chrome://messenger/skin/icons/timeline.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  -moz-border-radius: 4px;
+}
+
+#date-toggle:hover {
+  background-color: #729fcf;
+  color: #ffffff;
+  background-image: url("chrome://messenger/skin/icons/timeline-inverted.png");
+}
+
+
+.facet-date-zoom-out {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  width: 24px !important;
+  height: 24px !important;
+  background-position: center center;
+  background-repeat: no-repeat;
+  -moz-border-radius: 4px;
+}
+
+.facetious[type="date"][zoomedout="false"] .facet-date-zoom-out {
+  background-image: url("chrome://messenger/skin/icons/zoomout.png");
+  background-color: #babdb6;
+  cursor: pointer;
+}
+
+.facetious[type="date"][zoomedout="false"] .facet-date-zoom-out:hover {
+  background-image: url("chrome://messenger/skin/icons/zoomout-hover.png");
+  background-color: #729fcf;
+}
+
+.date-vis-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* === Boolean Facet === */
+
+#facet-fromMe, #facet-toMe, #facet-star, #facet-attachmentTypes {
+  display: inline-block; /* override the general .facetious list-item style */
+}
+
+.facetious[type="boolean"][disabled] {
+  color: #888888;
+}
+
+.facet-checkbox-bubble {
+  padding: 2px;
+  padding-right: 6px;
+  border: solid transparent 1px;
+  cursor: pointer;
+  color: #333;
+  font-size: 90%;
+}
+
+
+.facetious[type="boolean"][disabled] > .facet-checkbox-bubble,
+.facetious[type="boolean-filtered"][disabled] > .facet-checkbox-bubble {
+  cursor: default;
+  color: #777;
+}
+
+.facetious[type="boolean"]:not([disabled]):hover > .facet-checkbox-bubble,
+.facetious[type="boolean-filtered"]:not([disabled]):hover > .facet-checkbox-bubble {
+  background-color: #729fcf;
+  -moz-border-radius: 4px;
+  color: #ffffff;
+
+}
+
+
+
+.facet-checkbox-label {
+}
+
+.facet-checkbox-count {
+  color: GrayText;
+}
+.facet-checkbox-count:before {
+  content: " (";
+}
+.facet-checkbox-count:after {
+  content: ")";
+}
+
+/* === Boolean Filtered === */
+
+.facetious[type="boolean-filtered"]:not([checked]) > .facet-filter-list {
+  display: none
+}
+
+.facet-filter-list {
+  display: block;
+}
+
+/* === Discrete Facet === */
+
+.facet-content {
+  max-height: 32em;
+  overflow: auto;
+}
+
+
+.facet-more[needed="true"] {
+  display: inline-block;
+  margin-top: 0.5em;
+  padding: 0.2em 1em;
+  font-weight: normal;
+  font-size: 85%;
+  color: #000000;
+  background-color: #babdb6;
+  cursor: pointer;
+  -moz-border-radius: 4px;
+}
+
+.facet-more[needed="true"]:hover {
+  background-color: #729fcf;
+  color: #ffffff;
+  text-decoration: none;
+ }
+
+.facet-more[needed="false"] {
+  display: none;
+}
+
+.facet-more:hover {
+  text-decoration: underline;
+}
+
+.bar {
+  display: block;
+}
+
+.bar-count {
+  position: absolute;
+  right: 3px;
+  margin-right: 1.5em;
+  line-height: 1.6em;
+  color: GrayText;
+}
+
+.barry {
+  border-top: 1px solid #ccc;
+  margin: 0;
+  padding: 0; 
+  /*padding: 4px;*/
+}
+
+.bar {
+  display: block;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 80%;
+}
+
+
+.bar:hover {
+  background: #e2e2e2;
+}
+
+.bar-link {
+  display: inline-block;
+  color: #2D7BB2;
+  text-decoration: none;
+  display: block;
+  padding: 0.3em 2em 0.3em 0.5em;
+  padding-right: 4em;
+  position: relative;
+  z-index: 2;
+}
+
+.bar:hover > .bar-link {
+  color: #333;
+}
+
+.bar-percent {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #e9f2f5;
+  text-indent: -9999px;
+  overflow: hidden;
+  line-height: 1.6em;
+}
+
+.bar:hover > .bar-percent {
+  background: #ceeaf5;
+}
+
+.bar-exclude {
+  display: block;
+  visibility: hidden;
+  background-image: url("chrome://messenger/skin/icons/exclude.png");
+  position: absolute;
+  top: 0.3em;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  z-index: 3;
+}
+
+.bar[variety="remainder"]:hover > .bar-exclude {
+  visibility: visible;
+}
+
+.bar-exclude:hover {
+  background-image: url("chrome://messenger/skin/icons/exclude-selected.png");
+}
+
+/* ===== Results ===== */
+
+.results-message-header {
+  display: table;
+  width: 100%;
+  background-color: #edeeef;
+  border-top: 2px solid #ddd;
+  padding: 2px;
+  margin-bottom: 0.5em;
+}
+
+.results-message-count {
+  display: table-cell;
+  margin: 0;
+  padding-left: 2px;
+  font-weight: normal;
+  font-size: small;
+}
+
+.results-message-showall {
+  display: table-cell;
+}
+
+.results-message-showall-button {
+  padding: 0.2em 1em;
+  font-size: small;
+  -moz-border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.results-message-showall-button:hover {
+  background-color: #729fcf;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+
+.results-message-sort-bar {
+  display: table-cell;
+  padding-right: 2px;
+  text-align: right;
+  font-size: small;
+}
+
+.results-message-sort-label {
+  color: grey;
+}
+
+.results-message-sort-value {
+  padding: 0.2em;
+}
+
+.results-message-sort-value:hover {
+  -moz-border-radius: 4px;
+  background-color: #729fcf;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.results-message-sort-value[selected="true"] {
+  font-weight: bold;
+}
+
+.results-message-sort-value[selected="true"]:hover {
+  cursor: default;
+  background-color: #dcddde;
+  color: #000000;
+}
+
+/* ===== Messages ===== */
+
+.message {
+  display: block;
+  font-family: sans-serif;
+  font-size: small;
+  padding: 3px 0;
+  margin: 3px 0;
+  border-bottom: 1px solid #ddd;
+  color: #555;
+  background-color: #ffffff;
+}
+
+.message:hover .message-subject {
+  text-decoration: underline;
+}
+.message:focus {
+  border: 1px dotted #111;
+  padding: 1em 0px;
+}
+.message[unread="true"]:focus {
+  border: 1px dotted #111;
+  padding: 1em 0px;
+}
+.message:focus:last-child {
+  border: 1px dotted #111;
+  padding: 1em 0px;
+}
+.message:focus:first-child {
+  border: 1px dotted #111;
+  padding: 1em 0px;
+}
+.message:last-child {
+  border-bottom: 1px solid transparent;
+}
+
+.message-header {
+  margin-bottom: 0.5em;
+}
+.message-meta {
+  float: right;
+  padding-left: 2em;
+  text-align: right;
+  max-width: 20em;
+  max-height: 10em;
+  overflow: hidden;
+  color: #999;
+}
+
+.message-attachments {
+  text-align: right;
+  overflow: hidden;
+}
+
+.message-attachment {
+  max-width: 20em;
+  text-align: left;
+  display: inline-block;
+}
+
+.message-attachment-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: url("chrome://messenger/skin/icons/attachment.png") transparent no-repeat center right;
+}
+
+.message-line {
+  position: relative;
+}
+
+.message-addresses-group {
+  text-align: right;
+}
+
+.message-date {
+  color: #999;
+}
+
+.message-star[starred="true"] {
+  display: inline-block;
+  width: 12px !important;
+  height: 12px;
+  background-image: url("chrome://messenger/skin/icons/flag-col.png");
+}
+
+.message-addresses-group {
+  padding-left: 1em;
+}
+
+.message-subject-group {
+  padding-left: 2px; /* to lign up the subjects with the "Top N messages out of M" */
+}
+
+.message-author, .message-recipients {
+  text-align: right;
+  display: inline;
+  color: #222;
+}
+
+.message-recipient:first-child:before {
+  content: "";
+}
+.message-recipient:after {
+  content: ", ";
+}
+.message-recipient:last-child:after {
+  content: "";
+}
+
+.message-subject {
+  color: #3465a4;
+  font-size: medium;
+}
+
+.message-subject:hover {
+  cursor: pointer;
+}
+
+.message-body {
+  color: black;
+  margin-left: 1em;
+  font-family: monospace;
+  font-size: medium;
+  white-space: pre-wrap;
+}
+
+.message-recipients-group {
+  margin-left: 0.5em;
+  font-size: small;
+}
+
+.message-tag {
+  display: inline-block; /* to avoid splitting 'To' and 'Do' e.g. */
+  -moz-margin-start: 0px;
+  background-image: url("chrome://messenger/skin/tagbg.png");
+  color: black;
+  -moz-border-radius: 2px;
+  padding: 1px 3px;
+  margin-right: 3px;
+}
+.message-folder {
+  background-color: #faf0b8;
+  border: 1px solid #ede4af;
+}
+
+.show-more {
+  background-color: #babdb6;
+  -moz-border-radius: 4px;
+  float: right;
+  padding: 0.2em 1em;
+  font-size: small;
+  margin-right: 1em;
+  margin-bottom: 2em;
+  color: #000000;
+}
+
+.show-more:hover {
+  background-color: #729fcf;
+  color: #ffffff;
+  cursor: pointer;
+}
