@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+# -*- Mode: Java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+# ***** BEGIN LICENSE BLOCK *****
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# The Original Code is the Instantbird Preferences window.
+#
+# The Initial Developer of the Original Code is
+# Florian Queze <florian@instantbird.org>.
+# Portions created by the Initial Developer are Copyright (C) 2009
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either the GNU General Public License Version 2 or later (the "GPL"), or
+# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+# ***** END LICENSE BLOCK *****
+
+<!DOCTYPE overlay [
+  <!ENTITY % themesDTD SYSTEM "chrome://instantbird/locale/preferences/themes.dtd">
+  %themesDTD;
+]>
+
+<overlay id="ThemesPaneOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <prefpane id="paneThemes"
+            onpaneload="gThemePane.init();"
+            flex="1">
+
+    <script type="application/javascript" src="chrome://instantbird/content/preferences/messagestyle.js"/>
+    <script type="application/javascript" src="chrome://instantbird/content/preferences/smileys.js"/>
+    <script type="application/javascript" src="chrome://instantbird/content/preferences/themes.js"/>
+    <script type="application/javascript" src="chrome://global/content/contentAreaUtils.js"/>
+
+    <preferences id="themesPreferences">
+      <preference id="messenger.options.messagesStyle.theme"      name="messenger.options.messagesStyle.theme"      type="string"/>
+      <preference id="messenger.options.messagesStyle.variant"    name="messenger.options.messagesStyle.variant"    type="string"/>
+      <preference id="messenger.options.messagesStyle.showHeader" name="messenger.options.messagesStyle.showHeader" type="bool"/>
+      <preference id="messenger.options.emoticonsTheme"           name="messenger.options.emoticonsTheme"           type="string"/>
+    </preferences>
+
+    <stringbundleset id="stringbundleset">
+      <stringbundle id="messageStyleBundle"
+                    src="chrome://instantbird/locale/preferences/messagestyle.properties"/>
+    </stringbundleset>
+
+    <tabbox flex="1">
+      <tabs>
+        <tab label="&messageStyleTab.title;"/>
+        <tab label="&emoticonsTab.title;"/>
+        <!--<tab label="Sounds"/>-->
+      </tabs>
+      <tabpanels flex="1">
+        <tabpanel orient="vertical" flex="1">
+          <hbox align="baseline">
+            <label value="&messageStyleTheme.label;" control="themename"/>
+            <menulist id="themename"
+                      preference="messenger.options.messagesStyle.theme"
+                      onselect="previewObserver.currentThemeChanged();">
+              <menupopup id="theme-menupopup">
+                <menuitem id="bubbles-menuitem"
+                          label="&messageStyleBubblesTheme.label;"
+                          value="bubbles"/>
+                <menuitem id="dark-menuitem"
+                          label="&messageStyleDarkTheme.label;"
+                          value="dark"/>
+                <menuitem id="papersheets-menuitem"
+                          label="&messageStylePaperSheetsTheme.label;"
+                          value="papersheets"/>
+                <menuitem id="simple-menuitem"
+                          label="&messageStyleSimpleTheme.label;"
+                          value="simple"/>
+                <menuseparator/>
+                <menuitem id="nomessagestyles-menuitem" label="&messageStyleNoExtraThemes.label;"
+                          disabled="true"/>
+              </menupopup>
+            </menulist>
+            <spacer flex="1"/>
+            <label id="getMoreMessageStyles" class="text-link" value="&messageStyleGetMore.label;"
+                  onclick="if (event.button == 0) { openURL(this.getAttribute('getMoreURL'));}"/>
+          </hbox>
+          <separator class="thin"/>
+          <label value="&messageStylePreview.label;"/>
+          <deck flex="1" id="previewDeck" selectedIndex="1">
+            <vbox flex="1" id="noPreviewScreen" align="center" pack="center">
+              <hbox id="noPreviewBox" align="top">
+                <image id="noPreviewImage"/>
+                <vbox id="noPreviewInnerBox" flex="1">
+                  <label id="noPreviewTitle" value="&messageStyleNoPreview.title;"/>
+                  <description id="noAccountDesc">&messageStyleNoPreview.description;</description>
+                </vbox>
+              </hbox>
+            </vbox>
+            <browser flex="1" id="previewbrowser" type="content-conversation"/>
+          </deck>
+          <hbox align="baseline">
+            <label value="&messageStyleVariant.label;" control="themevariant"/>
+            <menulist id="themevariant"
+                      preference="messenger.options.messagesStyle.variant"
+                      onselect="previewObserver.currentVariantChanged();"/>
+          </hbox>
+          <checkbox id="showHeaderCheckbox" label="&messageStyleShowHeader.label;"
+                    preference="messenger.options.messagesStyle.showHeader"/>
+        </tabpanel>
+
+        <tabpanel orient="vertical" flex="1">
+          <hbox align="baseline">
+            <label value="&emoticonsTheme.label;" control="smileythemename"/>
+            <menulist id="smileythemename"
+                      preference="messenger.options.emoticonsTheme"
+                      onselect="smileysPreview.displayCurrentTheme();">
+              <menupopup id="theme-menupopup">
+                <menuitem id="default-menuitem"
+                          label="&emoticonsDefaultTheme.label;"
+                          value="default"/>
+                <menuitem id="none-menuitem"
+                          label="&emoticonsDisabled.label;"
+                          value="none"/>
+                <menuseparator/>
+                <menuitem id="noemoticons-menuitem" label="&emoticonsNoExtraThemes.label;"
+                          disabled="true"/>
+              </menupopup>
+            </menulist>
+            <spacer flex="1"/>
+            <label id="getMoreEmoticons" class="text-link" value="&emoticonsGetMore.label;"
+                  onclick="if (event.button == 0) { openURL(this.getAttribute('getMoreURL')); }"/>
+          </hbox>
+          <separator class="thin"/>
+          <description>&emoticonsPreview.description;</description>
+          <richlistbox orient="vertical" id="smileysPreview">
+            <listheader equalsize="always">
+              <treecol id="imageColumn" label="&emoticonsImageColumn.label;" flex="1"/>
+              <treecol id="textCodesColumn" label="&emoticonsTextCodesColumn.label;" flex="1"/>
+            </listheader>
+          </richlistbox>
+        </tabpanel>
+      </tabpanels>
+    </tabbox>
+  </prefpane>
+</overlay>

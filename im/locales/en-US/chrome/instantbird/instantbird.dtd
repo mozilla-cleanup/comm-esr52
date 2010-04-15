@@ -1,0 +1,107 @@
+<!ENTITY convWindow.title   "Conversations - &brandShortName;">
+<!ENTITY convWindow.titlemodifiermenuseparator " - ">
+<!ENTITY convWindow.titlemodifier "&brandShortName;">
+<!ENTITY logsWindow.title   "Conversation logs - &brandShortName;">
+<!ENTITY logsWindow.titlemodifiermenuseparator " - ">
+<!ENTITY logsWindow.titlemodifier "&brandShortName;">
+<!ENTITY blist.title        "Buddy list - &brandShortName;">
+<!ENTITY file.menu          "File">
+<!ENTITY file.accesskey     "F">
+
+<!-- Copied from mozilla/browser/locales/en-US/chrome/browser/browser.dtd -->
+<!ENTITY quitApplicationCmdWin.label       "Exit">
+<!ENTITY quitApplicationCmdWin.accesskey   "x">
+<!ENTITY quitApplicationCmd.label       "Quit">
+<!ENTITY quitApplicationCmd.accesskey   "Q">
+<!ENTITY quitApplicationCmdMac.label    "Quit &brandShortName;">
+<!ENTITY quitApplicationCmdMac.key      "Q">
+
+<!ENTITY addBuddy           "Add Buddy…">
+<!ENTITY joinChat           "Join Chat…">
+<!ENTITY setStatusTo        "Set Status to…">
+<!ENTITY available          "Available">
+<!ENTITY unavailable        "Unavailable">
+<!ENTITY offline            "Offline">
+<!ENTITY tools.menu         "Tools">
+<!ENTITY tools.accesskey    "T">
+<!ENTITY accountManager     "Accounts">
+<!ENTITY account.commandkey "a">
+<!ENTITY account.accesskey  "A">
+<!ENTITY addonManager       "Add-ons">
+<!ENTITY checkForUpdates    "Check for Updates">
+<!ENTITY help.menu          "Help">
+<!ENTITY help.accesskey     "H">
+<!-- LOCALIZATION NOTE (helpWin.menu):
+    Some localizations of Windows (e.g. French, German) use "?" for the help
+    button in the menubar. -->
+<!ENTITY helpWin.menu       "Help">
+<!ENTITY helpWin.accesskey  "H">
+<!ENTITY about.menu         "About &brandShortName;">
+<!ENTITY about.accesskey    "A">
+<!ENTITY conversation.contextMenu.close "Close Tab">
+<!ENTITY chat.participants  "Participants:">
+<!ENTITY topicBar.tooltip   "Double click to change topic">
+<!ENTITY topicBar.button.label        "Change">
+<!ENTITY topicBar.button.accesskey    "C">
+
+<!ENTITY errorConsoleCmd.label        "Error Console">
+<!ENTITY errorConsoleCmd.accesskey    "C">
+<!ENTITY errorConsoleCmd.commandkey   "j">
+
+<!ENTITY preferencesCmd.label         "Options…">
+<!ENTITY preferencesCmd.accesskey     "O"> 
+<!ENTITY preferencesCmdUnix.label     "Preferences">
+<!ENTITY preferencesCmdUnix.accesskey "n"> 
+
+<!ENTITY textEnlarge.commandkey   "+">
+<!ENTITY textEnlarge.commandkey2  "=">
+<!ENTITY textEnlarge.commandkey3  "">
+<!ENTITY textReduce.commandkey    "-">
+<!ENTITY textReduce.commandkey2   "">
+<!ENTITY textReset.commandkey     "0">
+<!ENTITY textReset.commandkey2    "">
+
+<!ENTITY findOnCmd.commandkey     "f">
+<!ENTITY findAgainCmd.commandkey  "g">
+<!ENTITY findAgainCmd.commandkey2 "VK_F3">
+
+<!ENTITY openLinkCmd.label            "Open Link…">
+<!ENTITY openLinkCmd.accesskey        "O">
+<!ENTITY copyLinkCmd.label            "Copy Link Location">
+<!ENTITY copyLinkCmd.accesskey        "a">
+<!ENTITY copyEmailCmd.label           "Copy Email Address">
+<!ENTITY copyEmailCmd.accesskey       "E">
+<!ENTITY engineManagerCmd.label       "Manage Search Engines…">
+
+<!ENTITY openConversationCmd.label     "Start a conversation">
+<!ENTITY openConversationCmd.accesskey "c">
+<!ENTITY aliasCmd.label                "Rename">
+<!ENTITY aliasCmd.accesskey            "R">
+<!ENTITY deleteCmd.label               "Remove">
+<!ENTITY deleteCmd.accesskey           "v">
+<!ENTITY moveCmd.label                 "Move to…">
+<!ENTITY moveCmd.accesskey             "M">
+<!ENTITY moveNewTagCmd.label           "New Group…">
+<!ENTITY moveNewTagCmd.accesskey       "N">
+<!ENTITY showLogsCmd.label             "Show Logs">
+<!ENTITY showLogsCmd.accesskey         "L">
+<!ENTITY showOfflineBuddiesCmd.label   "Show offline buddies">
+<!ENTITY showOfflineBuddiesCmd.accesskey "o">
+
+<!-- Copied from mozilla/browser/locales/en-US/chrome/browser/baseMenuOverlay.dtd -->
+<!--  Mac OS X Window Menu -->
+<!ENTITY windowMenu.label "Window">
+<!ENTITY minimizeWindow.label "Minimize">
+<!ENTITY minimizeWindow.key "m">
+<!ENTITY bringAllToFront.label "Bring All to Front">
+<!ENTITY zoomWindow.label "Zoom">
+
+<!-- Mac OS X Application Menu (Cocoa widgets) -->
+<!ENTITY preferencesCmdMac.label        "Preferences…">
+<!ENTITY preferencesCmdMac.commandkey   ",">
+<!ENTITY servicesMenuMac.label          "Services">
+<!ENTITY hideThisAppCmdMac.label        "Hide &brandShortName;">
+<!ENTITY hideThisAppCmdMac.commandkey   "H">
+<!ENTITY hideOtherAppsCmdMac.label      "Hide Others">
+<!ENTITY hideOtherAppsCmdMac.commandkey "H">
+<!ENTITY showAllAppsCmdMac.label        "Show All">

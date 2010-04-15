@@ -1,0 +1,230 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Instantbird messenging client, released
+ * 2007.
+ *
+ * The Initial Developer of the Original Code is
+ * Florian QUEZE <florian@instantbird.org>.
+ * Portions created by the Initial Developer are Copyright (C) 2007
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+richlistbox {
+  margin: 0 0;
+  -moz-appearance: none;
+}
+
+buddy,
+group {
+  padding: 2px 2px 2px 2px;
+}
+
+buddy[selected="true"],
+group[selected="true"] {
+  background-color: -moz-Dialog;
+  color: -moz-DialogText;
+}
+
+.buddyDisplayName {
+  -moz-margin-end: 0;
+}
+
+.prplBuddyIcon {
+  -moz-margin-end: 3px;
+  -moz-margin-start: 3px;
+  width: 16px;
+  max-width: 16px;
+  height: 16px;
+  max-height: 16px;
+}
+
+.protoIcon, .statusIcon {
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+}
+
+group label,
+.buddyDisplayName {
+  margin: 0 2px;
+}
+
+buddy[status="away"] .statusIcon {
+  background-image: url('chrome://instantbird/skin/away.png');
+}
+
+buddy[status="idle"] .statusIcon {
+  background-image: url('chrome://instantbird/skin/idle.png');
+}
+
+buddy[status="mobile"] .statusIcon {
+  background-image: url('chrome://instantbird/skin/mobile.png');
+}
+
+buddy[status="idle"] .buddyDisplayName {
+  color: GrayText;
+}
+
+buddy[status="offline"] .statusIcon {
+  background-image: url('chrome://instantbird/skin/offline.png');
+}
+
+buddy[status="offline"] .protoIcon {
+  opacity: 0.3;
+}
+
+buddy[status="offline"][selected="true"] .protoIcon {
+  opacity: 0.7;
+}
+
+buddy[removing="true"] .buddyDisplayName {
+  color: GrayText;
+  font-style: italic;
+}
+
+buddy[collapsing="true"] *,
+buddy[expanding="true"] *,
+group[collapsing="true"] * {
+  display: none;
+}
+
+group label {
+  font-weight: bold;
+}
+
+%ifdef XP_WIN
+group .twisty {
+  padding-top: 1px;
+  width: 9px; /* The image's width is 9 pixels */
+  -moz-margin-end: 3px;
+  -moz-margin-start: 3px;
+  background: url("chrome://global/skin/tree/twisty-open.png") no-repeat center;
+}
+
+group[closed] .twisty {
+  background: url("chrome://global/skin/tree/twisty-clsd.png") no-repeat center;
+}
+%else
+%ifdef XP_MACOSX
+group .twisty {
+  width: 9px;
+  -moz-margin-end: 3px;
+  -moz-margin-start: 3px;
+  background: url("chrome://global/skin/arrow/arrow-dn-sharp.gif") no-repeat center;
+}
+
+group[closed] .twisty {
+  background: url("chrome://global/skin/arrow/arrow-rit-sharp.gif") no-repeat center;
+}
+%else
+group .twisty {
+  -moz-appearance: treetwistyopen;
+}
+
+group[closed] .twisty {
+  -moz-appearance: treetwisty;
+}
+%endif
+%endif
+
+#updatesMenuItem[loading="true"] {
+  list-style-image: url("chrome://global/skin/icons/loading_16.png");
+}
+
+#statusArea {
+  margin: 0 0;
+  padding: 0 0;
+  -moz-box-align: center;
+}
+
+#statusTypeIcon {
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  min-width: 16px;
+  cursor: pointer;
+  -moz-appearance: none;
+  background-color: transparent;
+  border: none;
+  margin: 3px 5px;
+}
+
+#statusTypeIcon dropmarker {
+  display: none;
+}
+
+%ifdef XP_WIN
+#statusTypeIcon .button-box {
+  padding: 0 0;
+  border: none;
+}
+%endif
+
+#statusTypeIcon[status="available"],
+#statusTypeAvailable {
+  list-style-image: url('chrome://instantbird/skin/available-16.png');
+}
+
+#statusTypeIcon[status="unavailable"],
+#statusTypeIcon[status="away"],
+#statusTypeUnavailable {
+  list-style-image: url('chrome://instantbird/skin/away-16.png');
+}
+
+#statusTypeIcon[status="offline"],
+#statusTypeIcon[status="invisible"],
+#statusTypeOffline {
+  list-style-image: url('chrome://instantbird/skin/offline-16.png');
+}
+
+#statusTypeIcon[status="idle"] {
+  list-style-image: url('chrome://instantbird/skin/idle-16.png');
+}
+
+%ifdef XP_MACOSX
+#statusMessage {
+  margin: 0 0;
+}
+
+#statusMessage[editing] {
+  margin: 0 2px 0 -4px;
+}
+%else
+#statusMessage {
+  margin: 3px 0;
+}
+
+#statusMessage[editing] {
+%ifdef XP_WIN
+  margin: 0 1px 0 -2px;
+%else
+  margin: 0 0 0 -4px;
+%endif
+}
+%endif
