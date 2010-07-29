@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Instantbird messenging client, released
+   - 2007.
+   -
+   - The Initial Developer of the Original Code is
+   - Florian QUEZE <florian@instantbird.org>.
+   - Portions created by the Initial Developer are Copyright (C) 2007
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the GPL or the LGPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+<!DOCTYPE bindings>
+
+<bindings id="buddyBindings"
+          xmlns="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:html="http://www.w3.org/1999/xhtml">
+
+  <binding id="buddy" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+    <content align="center">
+      <xul:stack class="prplBuddyIcon">
+        <xul:image xbl:inherits="src=iconPrpl" class="protoIcon"/>
+        <xul:image class="statusIcon"/>
+      </xul:stack>
+      <xul:label crop="end" flex="1"
+                 anonid="displayname" class="buddyDisplayName"
+                 xbl:inherits="value=displayname"/>
+    </content>
+    <implementation>
+
+     <!-- delay in milliseconds before starting the fade out animation -->
+     <field name="animationDelay">1000</field>
+
+     <!-- delay between each frame of the animation, in milliseconds -->
+     <field name="animationInterval">20</field>
+
+     <method name="build">
+      <parameter name="aBuddy"/>
+      <parameter name="aGroup"/>
+      <body>
+      <![CDATA[
+        this.group = aGroup;
+        this.buddy = aBuddy;
+        this.buddyId = aBuddy.id; // used by group.xml
+        this.name = aBuddy.name;
+        this.setAttribute("displayname", aBuddy.alias || this.name);
+        //this.setAttribute("id", "buddy" + this.buddyId);
+        this.setAttribute("iconPrpl",
+                          aBuddy.getAccount(0).protocol.iconBaseURI + "icon.png");
+        this.accounts = { };
+        this.accountsCount = 0;
+        // We don't call this.update yet because this.accounts is empty
+#ifndef WINCE
+        // Don't do the animation if inside a closed group
+        if (this.hasAttribute("collapsed"))
+          return;
+
+        this.style.height = (this.animHeight = 0) + "px";
+        this.setAttribute("expanding", "true");
+        this.animInterval = setInterval(this._animateExpand, this.animationInterval, this);
+#endif
+      ]]>
+      </body>
+     </method>
+
+     <property name="offline">
+       <getter>
+         <![CDATA[
+           for (var id in this.accounts)
+             if (this.accounts[id].online)
+               return false;
+           return true;
+         ]]>
+       </getter>
+     </property>
+
+     <!-- returns true if no account remain and the buddy should be removed from the list -->
+     <method name="removeOfflineAccounts">
+       <body>
+         <![CDATA[
+           let offlineAccounts = [];
+           for (var id in this.accounts)
+             if (!this.accounts[id].online)
+               offlineAccounts.push(id);
+
+           if (offlineAccounts.length == this.accountsCount)
+             return true;
+
+           offlineAccounts.forEach(function (aId) { delete this.accounts[aId]; }, this);
+           this.accountsCount -= offlineAccounts.length;
+           this.update();
+           return false;
+         ]]>
+       </body>
+     </method>
+
+     <method name="update">
+      <body>
+      <![CDATA[
+        var accounts = [];
+        for (var id in this.accounts)
+          accounts.push(this.accounts[id]);
+
+        let status;
+        if (accounts.every(function(pab) !pab.online))
+          status = "offline";
+        else if (accounts.every(function(pab) pab.idle))
+          status = "idle";
+        else if (accounts.every(function(pab) pab.mobile))
+          status = "mobile";
+        else if (accounts.every(function(pab) !pab.available))
+          status = "away";
+        else
+          status = "available";
+        this.setAttribute("status", status);
+        let accountsWithAlias = accounts.filter(function(pab) pab.buddyAlias);
+        let alias;
+        if (accountsWithAlias.length)
+          alias = accountsWithAlias[0].buddyAlias;
+        this.setAttribute("displayname", alias || this.name);
+      ]]>
+      </body>
+     </method>
+
+     <method name="addAccount">
+      <parameter name="aPab"/>
+      <body>
+      <![CDATA[
+        var id = aPab.account.id;
+        if (id in this.accounts)
+          return;
+        this.accounts[id] = aPab;
+        ++this.accountsCount;
+        this.update();
+
+        if (this.hasAttribute("removing")) {
+          this.removeAttribute("removing");
+          this.removeAttribute("collapsing");
+          if (this.animTimeout) {
+            clearTimeout(this.animTimeout);
+            delete this.animTimeout;
+          }
+          if (this.animInterval) {
+            clearInterval(this.animInterval);
+            delete this.animTimeout;
+            delete this.animOpacity;
+            delete this.animHeight;
+            this.style.opacity = 1;
+          }
+        }
+      ]]>
+      </body>
+     </method>
+
+     <method name="removeAccount">
+      <parameter name="aPab"/>
+      <body>
+      <![CDATA[
+        var id = aPab.account.id;
+        if (!(id in this.accounts))
+          return; // this used to throw, but this seems to be harmless
+          //throw "This buddy (" + aPab.buddy.name +
+                  ") has not been added for account " + aPab.account.name;
+
+        delete this.accounts[id];
+        --this.accountsCount;
+
+        if (this.accountsCount) {
+          this.update();
+          return;
+        }
+
+        // No account left, this node is now useless, remove it
+        this.removing = true;
+        if (this.hasAttribute("expanding")) {
+           // We are still doing the expand animation!
+           clearInterval(this.animInterval);
+           this.setAttribute("collapsing", "true");
+           this.removeAttribute("expanding", "true");
+           this.animInterval = setInterval(this._animateCollapse, this.animationInterval, this);
+           this.group.removeBuddy(this);
+        }
+        else if (this.hasAttribute("collapsed"))
+          // If the buddy is not visible, remove it immediately (without animation)
+          this.group.removeBuddy(this);
+        else
+          this.animTimeout = setTimeout(this._startAnimation, this.animationDelay, this);
+        this.setAttribute("status", "offline");
+        this.setAttribute("removing", "true");
+      ]]>
+      </body>
+     </method>
+
+     <method name="startAliasing">
+      <body>
+      <![CDATA[
+        if (this.hasAttribute("aliasing"))
+          return; // prevent re-entry.
+
+        this.setAttribute("aliasing", "true");
+        let textbox =
+          document.getAnonymousElementByAttribute(this, "anonid", "displayname");
+        textbox.getBoundingClientRect(); // force binding attachmant by forcing layout
+        textbox.select();
+
+        // Some keys (home/end for example) can make the selected item
+        // of the richlistbox change without producing a blur event on
+        // our textbox. Make sure we watch richlistbox selection changes.
+        var self = this;
+        this._parentSelectListener = function(aEvent) {
+          if (aEvent.target == self.parentNode)
+            self.finishAliasing(true);
+        };
+        this.parentNode.addEventListener("select", this._parentSelectListener, false);
+      ]]>
+      </body>
+     </method>
+
+     <method name="finishAliasing">
+      <parameter name="aSave"/>
+      <body>
+      <![CDATA[
+        if (aSave) {
+          this.buddy.alias =
+            document.getAnonymousElementByAttribute(this, "anonid", "displayname").value;
+        }
+        this.removeAttribute("aliasing");
+        this.parentNode.removeEventListener("select", this._parentSelectListener, false);
+        delete this._parentSelectListener;
+        this.parentNode.focus();
+      ]]>
+      </body>
+     </method>
+
+     <method name="moveTo">
+      <parameter name="aGroupId"/>
+      <body>
+      <![CDATA[
+        let currentGroupId = this.group.groupId;
+        if (currentGroupId == aGroupId)
+          return;
+
+        let pts = Components.classes["@instantbird.org/purple/tags;1"]
+                            .getService(Ci.purpleITagsService);
+        let newGroup = pts.getTagById(aGroupId);
+        for (var id in this.accounts) {
+          let pab = this.accounts[id];
+          if (pab.tag.id == currentGroupId)
+            pab.tag = newGroup;
+        }
+      ]]>
+      </body>
+     </method>
+
+     <method name="remove">
+      <body>
+      <![CDATA[
+        let currentGroupId = this.group.groupId;
+        for (var id in this.accounts) {
+          let pab = this.accounts[id];
+          if (pab.tag.id == currentGroupId)
+            pab.remove();
+        }
+      ]]>
+      </body>
+     </method>
+
+     <method name="_startAnimation">
+      <parameter name="aThis"/>
+      <body>
+       <![CDATA[
+        aThis.animInterval = setInterval(aThis._animateFade, this.animationInterval, aThis);
+        delete aThis.animTimeout;
+        aThis.animOpacity = 1;
+       ]]>
+      </body>
+     </method>
+
+     <method name="_animateFade">
+      <parameter name="aThis"/>
+      <body>
+       <![CDATA[
+         const opacityStep = 0.05;
+         if (aThis.animOpacity > opacityStep) {
+           aThis.animOpacity -= opacityStep;
+           aThis.style.opacity = aThis.animOpacity;
+         }
+         else {
+           clearInterval(aThis.animInterval);
+           aThis.style.height = (aThis.animHeight = aThis.clientHeight) + "px";
+           aThis.setAttribute("collapsing", "true");
+           aThis.animInterval = setInterval(aThis._animateCollapse, this.animationInterval, aThis);
+           aThis.group.removeBuddy(aThis);
+         }
+      ]]>
+      </body>
+     </method>
+
+     <method name="_animateCollapse">
+      <parameter name="aThis"/>
+      <body>
+       <![CDATA[
+         const collapsingStep = 3;
+         if (aThis.animHeight > collapsingStep) {
+           aThis.animHeight -= collapsingStep;
+           aThis.style.height = aThis.animHeight + "px";
+         }
+         else {
+           clearInterval(aThis.animInterval);
+           delete aThis.animInterval;
+           aThis.parentNode.removeChild(aThis);
+         }
+      ]]>
+      </body>
+     </method>
+
+     <method name="_animateExpand">
+      <parameter name="aThis"/>
+      <body>
+       <![CDATA[
+         const expandingStep = 3;
+         if (aThis.animHeight < 20 - expandingStep) {
+           aThis.animHeight += expandingStep;
+           aThis.style.height = aThis.animHeight + "px";
+         }
+         else {
+           clearInterval(aThis.animInterval);
+           delete aThis.animInterval;
+           aThis.removeAttribute("expanding");
+         }
+      ]]>
+      </body>
+     </method>
+
+     <method name="canOpenConversation">
+      <body>
+       <![CDATA[
+         for (var id in this.accounts)
+           if (this.accounts[id].canSendMessage)
+             return true;
+         return false;
+       ]]>
+      </body>
+     </method>
+
+     <method name="openConversation">
+      <body>
+       <![CDATA[
+         var conv;
+         for (var id in this.accounts) {
+           if (!this.accounts[id].canSendMessage)
+             continue;
+
+           // this will send a new-conversation notification that will force
+           // opening a conversation window if there isn't one around
+           conv = this.accounts[id].createConversation();
+           break;
+         }
+
+         Conversations.focusConversation(conv);
+       ]]>
+      </body>
+     </method>
+
+     <method name="keyPress">
+      <parameter name="aEvent"/>
+      <body>
+      <![CDATA[
+        switch (aEvent.keyCode) {
+          // If Enter or Return is pressed, open a new conversation
+          case aEvent.DOM_VK_RETURN:
+          case aEvent.DOM_VK_ENTER:
+            if (this.hasAttribute("aliasing"))
+              this.finishAliasing(true);
+            else if (this.canOpenConversation())
+              this.openConversation();
+            break;
+
+          case aEvent.DOM_VK_F2:
+            if (!this.hasAttribute("aliasing"))
+              this.startAliasing();
+            break;
+
+          case aEvent.DOM_VK_ESCAPE:
+            if (this.hasAttribute("aliasing"))
+              this.finishAliasing(false);
+            break;
+        }
+      ]]>
+      </body>
+     </method>
+    </implementation>
+    <handlers>
+     <handler event="blur">
+       <![CDATA[
+         if (this.hasAttribute("aliasing") &&
+             document.documentElement.hasAttribute("active"))
+           finishAliasing(true);
+       ]]>
+     </handler>
+
+     <handler event="click" clickcount="2">
+       <![CDATA[
+         if (!this.hasAttribute("aliasing") && canOpenConversation())
+           openConversation();
+       ]]>
+     </handler>
+    </handlers>
+  </binding>
+</bindings>

@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Instantbird messenging client, released
+   - 2007.
+   -
+   - The Initial Developer of the Original Code is
+   - Florian QUEZE <florian@instantbird.org>.
+   - Portions created by the Initial Developer are Copyright (C) 2007
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the GPL or the LGPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!DOCTYPE bindings>
+
+<bindings id="groupBindings"
+          xmlns="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+          xmlns:xbl="http://www.mozilla.org/xbl">
+
+  <binding id="group" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+    <content>
+      <xul:image class="twisty"/>
+      <xul:label flex="1" crop="end" xbl:inherits="value=name"/>
+    </content>
+    <implementation implements="nsIObserver">
+
+     <destructor>
+      <![CDATA[
+        if (this.tag) {
+          this.tag.removeObserver(this);
+          delete this.tag;
+        }
+      ]]>
+     </destructor>
+
+     <!-- delay between each frame of the animation, in milliseconds -->
+     <field name="animationInterval">20</field>
+
+     <method name="build">
+      <parameter name="aGroup"/>
+      <body>
+      <![CDATA[
+        this.groupId = aGroup.id;
+        this.tag = aGroup;
+        this.name = aGroup.name;
+        this.buddies = [ ];
+        this.setAttribute("id", "group" + this.groupId);
+        this.setAttribute("name", this.name);
+        this.setAttribute("persist", "closed");
+
+        // restore the potential persisted value
+        var source = Components.classes["@mozilla.org/rdf/datasource;1?name=local-store"]
+                               .getService(Components.interfaces.nsIRDFDataSource);
+        var RDF = Components.classes["@mozilla.org/rdf/rdf-service;1"]
+                            .getService(Components.interfaces.nsIRDFService);
+        var elt = RDF.GetResource(document.location + "#" + this.id);
+        if (source.HasAssertion(elt, RDF.GetResource("closed"),
+                                RDF.GetLiteral("true"), true)) {
+          this.setAttribute("closed", "true");
+          this._updateGroupLabel();
+          this._updateClosedState(true);
+        }
+
+        let empty = true;
+        this.tag.getBuddies().forEach(function (aBuddy) {
+          aBuddy.getAccountBuddies()
+                .filter(function (b) (this.showOffline || b.online) && b.tag.id == this.groupId, this)
+                .forEach(function(b) { this.addBuddy(b); empty = false; }, this);
+        }, this);
+
+        if (!empty)
+          this.tag.addObserver(this);
+        return !empty;
+      ]]>
+      </body>
+     </method>
+
+     <property name="showOffline">
+       <getter>
+         <![CDATA[
+           return this._showOffline;
+         ]]>
+       </getter>
+       <setter>
+         <![CDATA[
+           this._showOffline = val;
+           if (val) {
+             this.tag.getBuddies().forEach(function (aBuddy) {
+               aBuddy.getAccountBuddies()
+                     .filter(function (b) !b.online && b.tag.id == this.groupId, this)
+                     .forEach(function(b) { this.addBuddy(b); }, this);
+             }, this);
+           }
+           else {
+             this.buddies.filter(function (b) b.removeOfflineAccounts())
+                         .forEach(function (b) { b.parentNode.removeChild(b);
+                                                 this.removeBuddy(b); }, this);
+           }
+           return val;
+         ]]>
+       </setter>
+     </property>
+
+     <!-- nsIObserver implementation -->
+     <method name="observe">
+       <parameter name="aSubject"/>
+       <parameter name="aTopic"/>
+       <parameter name="aData"/>
+       <body>
+       <![CDATA[
+         if (this.showOffline) {
+           if (aTopic == "buddy-added")
+             this.addBuddy(aSubject);
+           else if (aTopic == "buddy-deleted" || aTopic == "buddy-removed-from-group")
+             this.signedOff(aSubject);
+           else
+             this.updateBuddy(aSubject);
+           return;
+         }
+
+         if (aTopic == "buddy-signed-on" || (aTopic == "buddy-added" && aSubject.online))
+           this.addBuddy(aSubject);
+         else if (aTopic == "buddy-signed-off" || aTopic == "buddy-removed")
+           this.signedOff(aSubject);
+         else if (aTopic == "buddy-idle" || aTopic == "buddy-away" || aTopic == "buddy-alias")
+           this.updateBuddy(aSubject);
+       ]]>
+       </body>
+     </method>
+
+     <method name="addBuddy">
+      <parameter name="aPab"/>
+      <body>
+      <![CDATA[
+        var buddy = aPab.buddy;
+
+        var buddyElt;
+        for (var i = 0; i < this.buddies.length; ++i) {
+          if (this.buddies[i].buddyId == buddy.id) {
+            buddyElt = this.buddies[i];
+            break;
+          }
+        }
+
+        if (!buddyElt) {
+          buddyElt = document.createElement("buddy");
+          let groupIsHidden = this.hasAttribute("closed");
+          if (groupIsHidden)
+            buddyElt.setAttribute("collapsed", "true");
+
+          var last = this;
+          if (this.buddies.length)
+            last = this.buddies[this.buddies.length - 1];
+
+          this.parentNode.insertBefore(buddyElt, last.nextSibling);
+          buddyElt.build(aPab.buddy, this);
+          this.buddies.push(buddyElt);
+
+          if (groupIsHidden)
+            this._updateGroupLabel();
+        }
+        buddyElt.addAccount(aPab);
+
+        if (this.hasAttribute("collapsing")) {
+          this.removeAttribute("collapsing");
+          if (this.animInterval) {
+            clearInterval(this.animInterval);
+            delete this.animInterval;
+            delete this.animHeight;
+          }
+        }
+      ]]>
+      </body>
+     </method>
+
+     <method name="signedOff">
+      <parameter name="aPab"/>
+      <body>
+      <![CDATA[
+        var buddy = aPab.buddy;
+
+        for (var i = 0; i < this.buddies.length; ++i) {
+          if (this.buddies[i].buddyId == buddy.id) {
+            this.buddies[i].removeAccount(aPab);
+            return;
+          }
+        }
+      ]]>
+      </body>
+     </method>
+
+     <method name="removeBuddy">
+      <parameter name="aBuddy"/>
+      <body>
+      <![CDATA[
+        var i = this.buddies.indexOf(aBuddy);
+        if (i == -1)
+          throw "Removing a buddy that doesn't exist?";
+
+        // remove the buddy from the array
+        this.buddies.splice(i, 1);
+
+        // Check if some buddy remain in the group, if empty remove it
+        if (!this.buddies.length) {
+          this.style.height = (this.animHeight = this.clientHeight) + "px";
+          this.setAttribute("collapsing", "true");
+          this.animInterval = setInterval(this._animateCollapse, this.animationInterval, this);
+        }
+        else
+          this._updateGroupLabel();
+      ]]>
+      </body>
+     </method>
+
+     <method name="_animateCollapse">
+      <parameter name="aThis"/>
+      <body>
+       <![CDATA[
+         const collapsingStep = 3;
+         if (aThis.animHeight > collapsingStep) {
+           aThis.animHeight -= collapsingStep;
+           aThis.style.height = aThis.animHeight + "px";
+         }
+         else {
+           clearInterval(aThis.animInterval);
+           delete aThis.animInterval;
+           aThis.tag.removeObserver(aThis);
+           aThis.parentNode.removeChild(aThis);
+         }
+      ]]>
+      </body>
+     </method>
+
+     <method name="updateBuddy">
+      <parameter name="aPab"/>
+      <body>
+      <![CDATA[
+        var buddy = aPab.buddy;
+
+        for (var i = 0; i < this.buddies.length; ++i) {
+          if (this.buddies[i].buddyId == buddy.id) {
+            this.buddies[i].update();
+            return;
+          }
+        }
+      ]]>
+      </body>
+     </method>
+
+     <method name="_updateClosedState">
+      <parameter name="aClosed"/>
+      <body>
+      <![CDATA[
+        for (let i = 0; i < this.buddies.length; ++i)
+          this.buddies[i].collapsed = aClosed;
+      ]]>
+      </body>
+     </method>
+
+     <method name="close">
+      <body>
+      <![CDATA[
+        if (this.hasAttribute("closed")) {
+          this.removeAttribute("closed");
+          this._updateClosedState(false);
+        }
+        else {
+          this.setAttribute("closed", "true");
+          this._updateClosedState(true);
+        }
+
+        this._updateGroupLabel();
+      ]]>
+      </body>
+     </method>
+
+     <method name="_updateGroupLabel">
+      <body>
+      <![CDATA[
+        let name = this.name;
+        if (this.hasAttribute("closed"))
+          name += " (" + this.buddies.length + ")";
+
+        this.setAttribute("name", name);
+      ]]>
+      </body>
+     </method>
+
+     <method name="keyPress">
+      <parameter name="aEvent"/>
+      <body>
+      <![CDATA[
+        switch (aEvent.keyCode) {
+          case aEvent.DOM_VK_RETURN:
+          case aEvent.DOM_VK_ENTER:
+            this.close();
+            break;
+
+          case aEvent.DOM_VK_LEFT:
+            if (!this.hasAttribute("closed"))
+              this.close();
+            break;
+
+          case aEvent.DOM_VK_RIGHT:
+            if (this.hasAttribute("closed"))
+              this.close();
+            break;
+        }
+      ]]>
+      </body>
+     </method>
+    </implementation>
+    <handlers>
+     <handler event="click">
+     <![CDATA[
+        // Check if there was 1 click on the image or 2 clicks on the label
+        if ((event.detail == 1 && event.originalTarget.localName == "image") ||
+            (event.detail == 2 && event.originalTarget.localName == "label"))
+          this.close();
+     ]]>
+     </handler>
+    </handlers>
+  </binding>
+</bindings>
