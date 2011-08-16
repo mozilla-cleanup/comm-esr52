@@ -1,0 +1,14 @@
+<?xml version="1.0"?> 
+<!-- unix version of platformMailnewsOverlay.xul -->
+
+<!DOCTYPE overlay SYSTEM "chrome://messenger/locale/messenger.dtd">
+
+<overlay id="platformMailnewsOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <!-- Delete Key -->
+    <key id="key_shiftDelete" keycode="VK_DELETE" modifiers="shift" command="cmd_shiftDelete"/>
+
+    <!-- Reload Key -->
+    <key id="key_reload" keycode="VK_F5" oncommand="ReloadMessage();"/>
+</overlay>
