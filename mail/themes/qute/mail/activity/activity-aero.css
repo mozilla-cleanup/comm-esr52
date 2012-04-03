@@ -1,0 +1,18 @@
+%include activity.css
+
+@media all and (-moz-windows-compositor) {
+  #activityManager {
+    -moz-appearance: -moz-win-glass;
+    background: transparent;
+  }
+
+  .activityview {
+    border: 1px solid rgba(10%, 10%, 10%, .4);
+    background-clip: padding-box
+  }
+
+  #clearListButton {
+    -moz-margin-start: 0;
+    margin-bottom: 0;
+  }
+}
