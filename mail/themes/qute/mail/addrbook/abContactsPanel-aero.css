@@ -1,0 +1,109 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is abContactsPanel-aero.css.
+ *
+ * The Initial Developer of the Original Code is
+ * the Mozilla Foundation.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ * Richard Marti <richard.marti@gmail.com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+%include abContactsPanel.css
+
+@media (-moz-windows-default-theme) {
+  #abContactsPanel {
+    -moz-appearance: none;
+    background-color: hsl(210, 75%, 92%);
+  }
+}
+
+@media (-moz-windows-compositor) {
+  #abContactsPanel {
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.5) 10px,
+                        rgba(255, 255, 255, 0));
+  }
+}
+
+#abResultsTree {
+  -moz-border-end: none;
+  border-bottom: 1px solid #A9B1B8;
+}
+
+@media (-moz-windows-default-theme) {
+  button,
+  #addressbookList {
+    -moz-appearance: none;
+    margin: 1px 4px;
+    padding: 1px 5px !important;
+    border-radius: 2px;
+    border: 1px solid;
+    background-image: -moz-linear-gradient(hsla(0, 0%, 100%, .6),
+                      hsla(0, 0%, 100%, .1));
+    background-color: hsla(210, 32%, 93%, .2);
+    border-color: hsla(210, 54%, 20%, .15) hsla(210, 54%, 20%, .2)
+                  hsla(210, 54%, 20%, .25);
+    box-shadow: 0 1px hsla(0, 0%, 100%, .3) inset,
+                0 1px hsla(210, 54%, 20%, .03),
+                0 0 2px hsla(210, 54%, 20%, .1);
+    -moz-transition-property: background-color, border-color, box-shadow;
+    -moz-transition-duration: 150ms;
+  }
+
+  button:hover,
+  #addressbookList:not([open="true"]):hover {
+    border-color: hsla(210, 54%, 20%, .3) hsla(210, 54%, 20%, .35)
+                  hsla(210, 54%, 20%, .4);
+    background-color: hsla(210, 48%, 96%, .75);
+    box-shadow: 0 0 1px hsla(210, 54%, 20%, .03),
+                0 0 2px hsla(210, 54%, 20%, .1);
+  }
+
+  button:hover:active,
+  #addressbookList[open="true"] {
+    background-image: -moz-linear-gradient(hsla(0, 0%, 100%, .6),
+                      hsla(0, 0%, 100%, .1));
+    background-color: hsla(210, 54%, 20%, .15);
+    border-color: hsla(210, 54%, 20%, .3) hsla(210, 54%, 20%, .35)
+                  hsla(210, 54%, 20%, .4);
+    box-shadow: 0 1px 1px hsla(210, 54%, 20%, .1) inset,
+                0 0 1px hsla(210, 54%, 20%, .2) inset,
+                0 1px 0 hsla(210, 54%, 20%, 0),
+                0 0 2px hsla(210, 54%, 20%, 0);
+    text-shadow: none;
+    -moz-transition: none;
+  }
+
+  .menulist-dropmarker {
+    -moz-appearance: none;
+    border:none;
+    background-color: transparent;
+    list-style-image: url("chrome://messenger/skin/icons/toolbarbutton-arrow.png");
+  }
+}
