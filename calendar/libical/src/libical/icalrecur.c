@@ -149,7 +149,7 @@
 #include <limits.h>
 
 #ifndef HAVE_INTPTR_T
-#if (defined (_MSC_VER) && _MSC_VER < 1400) || defined (XP_BEOS)
+#if (defined (_MSC_VER) && _MSC_VER < 1400)
 typedef long intptr_t;
 #endif
 #endif

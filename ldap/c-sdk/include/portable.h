@@ -168,8 +168,8 @@
 /*
  * for select()
  */
-#if !defined(WINSOCK) && !defined(_WINDOWS) && !defined(macintosh) && !defined(XP_OS2)
-#if defined(hpux) || defined(LINUX) || defined(SUNOS4) || defined(XP_BEOS)
+#if !defined(WINSOCK) && !defined(_WINDOWS) && !defined(macintosh)
+#if defined(hpux) || defined(LINUX) || defined(SUNOS4)
 #include <sys/time.h>
 #else
 #include <sys/select.h>
@@ -251,15 +251,10 @@ int strncasecmp(const char *, const char *, size_t);
 #endif /* LINUX1_2 */
 #endif /* SNI || LINUX1_2 */
 
-#if defined(_WINDOWS) || defined(macintosh) || defined(XP_OS2) || defined(DARWIN)
+#if defined(_WINDOWS) || defined(macintosh) || defined(DARWIN)
 #define GETHOSTBYNAME( n, r, b, l, e )  gethostbyname( n )
 #define NSLDAPI_CTIME( c, b, l )	ctime( c )
 #define STRTOK( s1, s2, l )		strtok( s1, s2 )
-#elif defined(XP_BEOS)
-#define GETHOSTBYNAME( n, r, b, l, e )  gethostbyname( n )
-#define NSLDAPI_CTIME( c, b, l )                ctime_r( c, b )
-#define STRTOK( s1, s2, l )		strtok_r( s1, s2, l )
-#define HAVE_STRTOK_R
 #else /* UNIX */
 #if (defined(AIX) && defined(_THREAD_SAFE)) || defined(OSF1)
 #define NSLDAPI_NETDB_BUF_SIZE	 sizeof(struct protoent_data) 
@@ -269,7 +264,7 @@ int strncasecmp(const char *, const char *, size_t);
 
 #if defined(sgi) || defined(HPUX9) || defined(SCOOS) || \
     defined(UNIXWARE) || defined(SUNOS4) || defined(SNI) || defined(BSDI) || \
-    defined(NCR) || defined(OSF1) || defined(NEC) || defined(VMS) || \
+    defined(NCR) || defined(OSF1) || defined(NEC) || \
     ( defined(HPUX10) && !defined(_REENTRANT)) || defined(HPUX11) || \
     defined(UnixWare) || defined(NETBSD) || \
     defined(FREEBSD) || defined(OPENBSD) || \
@@ -310,7 +305,7 @@ typedef char GETHOSTBYNAME_buf_t [NSLDAPI_NETDB_BUF_SIZE];
 #elif defined( IRIX6_2 ) || defined( IRIX6_3 ) || defined(UNIXWARE) \
 	|| defined(OSF1V4) || defined(AIX) || defined(UnixWare) \
         || defined(hpux) || defined(HPUX11) || defined(NETBSD) \
-        || defined(IRIX6) || defined(FREEBSD) || defined(VMS) \
+        || defined(IRIX6) || defined(FREEBSD) \
         || defined(NTO) || defined(OPENBSD) || defined(DRAGONFLY)
 #define NSLDAPI_CTIME( c, b, l )        ctime_r( c, b )
 #elif defined( OSF1V3 )
@@ -319,7 +314,7 @@ typedef char GETHOSTBYNAME_buf_t [NSLDAPI_NETDB_BUF_SIZE];
 #define NSLDAPI_CTIME( c, b, l )	ctime_r( c, b, l )
 #endif
 #if defined(hpux9) || defined(SUNOS4) || defined(SNI) || \
-    defined(SCOOS) || defined(BSDI) || defined(NCR) || defined(VMS) || \
+    defined(SCOOS) || defined(BSDI) || defined(NCR) || \
     defined(NEC) || (defined(LINUX) && __GNU_LIBRARY__ != 6) || \
     (defined(AIX) && !defined(USE_REENTRANT_LIBC))
 #define STRTOK( s1, s2, l )		strtok( s1, s2 )
@@ -340,14 +335,9 @@ extern char *strdup();
 #define	BSD_TIME	1	/* for servers/slapd/log.h */
 #endif /* sunos4 || osf */
 
-#if defined(XP_OS2)
-#include <machine/endian.h>   /* for htonl, et.al. */
-#include <arpa/inet.h>	      /* for inet_addr() */
-#elif !defined(_WINDOWS) && !defined(macintosh)
+#if !defined(_WINDOWS) && !defined(macintosh)
 #include <netinet/in.h>
-#if !defined(XP_BEOS)
 #include <arpa/inet.h>	/* for inet_addr() */
-#endif
 #endif
 
 
@@ -435,15 +425,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
  * into the Connection table */
 #define DS_MAX_NT_SOCKET_CONNECTIONS 2003
 
-#elif defined(XP_OS2)
-
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
-#define bzero(a, b) memset( a, 0, b )
-#include <string.h> /*for strcmpi()*/
-#include <time.h>   /*for ctime()*/
-
-#endif /* XP_OS2 */
+#endif /* _WINDOWS */
 
 /* Define a macro to support large files */
 #ifdef _LARGEFILE64_SOURCE

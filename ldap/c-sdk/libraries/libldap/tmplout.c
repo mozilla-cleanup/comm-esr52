@@ -976,7 +976,7 @@ time2text( char *ldtimestr, int dateonly )
 
 /* gtime.c - inverse gmtime */
 
-#if !defined( macintosh ) && !defined( _WINDOWS ) && !defined( DOS ) && !defined(XP_OS2)
+#if !defined( macintosh ) && !defined( _WINDOWS )
 #include <sys/time.h>
 #endif /* !macintosh */
 

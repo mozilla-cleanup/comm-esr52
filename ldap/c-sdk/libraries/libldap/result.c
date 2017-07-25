@@ -391,7 +391,7 @@ wait4msg( LDAP *ld, int msgid, int all, int unlock_permitted,
 			 */
 			err = nsldapi_iostatus_poll( ld, tvp );
 
-#if defined( LDAP_DEBUG ) && !defined( macintosh ) && !defined( DOS )
+#if defined( LDAP_DEBUG ) && !defined( macintosh )
 			if ( err == -1 ) {
 			    LDAPDebug( LDAP_DEBUG_TRACE,
 				    "nsldapi_iostatus_poll returned -1: errno %d\n",
@@ -399,7 +399,7 @@ wait4msg( LDAP *ld, int msgid, int all, int unlock_permitted,
 			}
 #endif
 
-#if !defined( macintosh ) && !defined( DOS )
+#if !defined( macintosh )
 			/*
 			 * If the restart option is enabled and the error
 			 * was EINTR, try again.
@@ -1144,7 +1144,7 @@ merge_error_info( LDAP *ld, LDAPRequest *parentr, LDAPRequest *lr )
 }
 
 #if defined( CLDAP )
-#if !defined( macintosh ) && !defined( DOS ) && !defined( _WINDOWS ) && !defined(XP_OS2)
+#if !defined( macintosh ) && !defined( _WINDOWS )
 /* XXXmcs: was revised to support extended I/O callbacks but never compiled! */
 static int
 cldap_select1( LDAP *ld, struct timeval *timeout )
@@ -1207,7 +1207,7 @@ cldap_select1( LDAP *ld, struct timeval *timeout )
 #endif /* macintosh */
 
 
-#if (defined( DOS ) && defined( WINSOCK )) || defined( _WINDOWS ) || defined(XP_OS2)
+#if defined( WINSOCK ) || defined( _WINDOWS )
 /* XXXmcs: needs to be revised to support extended I/O callbacks */
 static int
 cldap_select1( LDAP *ld, struct timeval *timeout )

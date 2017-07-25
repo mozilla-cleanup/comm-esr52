@@ -70,10 +70,6 @@ extern "C" {
 #include <sys/select.h>
 #endif /* _AIX */
 
-#ifdef XP_OS2
-#include <sys/select.h>
-#endif /* XP_OS2 */
-
 /*
  * LDAP_API macro definition:
  */

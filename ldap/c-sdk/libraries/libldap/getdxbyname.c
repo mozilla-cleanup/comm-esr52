@@ -61,7 +61,7 @@ XXX not MT-safe XXX
 #include <windows.h>
 #endif
 
-#if !defined(macintosh) && !defined(DOS) && !defined( _WINDOWS )
+#if !defined(macintosh) && !defined( _WINDOWS )
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
@@ -72,11 +72,6 @@ XXX not MT-safe XXX
 #include <resolv.h>
 #endif
 #include "ldap-int.h"
-
-#if defined( DOS ) 
-#include "msdos.h"
-#endif /* DOS */
-
 
 #ifdef NEEDPROTOS
 static char ** decode_answer( unsigned char *answer, int len );

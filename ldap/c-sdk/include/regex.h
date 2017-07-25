@@ -35,7 +35,7 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-#if defined( macintosh ) || defined( DOS ) || defined( _WINDOWS ) || defined( NEED_BSDREGEX ) || defined( XP_OS2 )
+#if defined( macintosh ) || defined( _WINDOWS ) || defined( NEED_BSDREGEX )
 /*
  * Copyright (c) 1993 Regents of the University of Michigan.
  * All rights reserved.
@@ -92,4 +92,4 @@ int LDAP_CALL re_subs();
 #ifdef __cplusplus
 }
 #endif
-#endif /* macintosh or DOS or or _WIN32 or NEED_BSDREGEX */
+#endif /* macintosh or _WIN32 or NEED_BSDREGEX */

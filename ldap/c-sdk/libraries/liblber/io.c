@@ -62,7 +62,7 @@
 #  define MAX_WRITE	65535
 #  define BerWrite( sb, b, l )   tcpwrite( sb->sb_sd, (unsigned char *)(b), (l<MAX_WRITE)? l : MAX_WRITE )
 # else /* macintosh */
-#  if defined(_WIN32) || defined(_WINDOWS) || defined(XP_OS2)
+#  if defined(_WIN32) || defined(_WINDOWS)
 /*
  * 32-bit Windows Socket API (under Windows NT or Windows 95)
  */
@@ -404,7 +404,7 @@ ber_flush( Sockbuf *sb, BerElement *ber, int freeit )
 			lber_bprint( ber->ber_rwptr, towrite );
 	}
 #endif
-#if !defined(macintosh) && !defined(DOS)
+#if !defined(macintosh)
 	if ( sb->sb_options & (LBER_SOCKBUF_OPT_TO_FILE | LBER_SOCKBUF_OPT_TO_FILE_ONLY) ) {
 		rc = write( sb->sb_copyfd, ber->ber_buf, towrite );
 		if ( sb->sb_options & LBER_SOCKBUF_OPT_TO_FILE_ONLY ) {
@@ -426,7 +426,7 @@ ber_flush( Sockbuf *sb, BerElement *ber, int freeit )
 				return( -1 );
 			/* fake error if write was not atomic */
 			if (rc < towrite) {
-#if !defined( macintosh ) && !defined( DOS )
+#if !defined( macintosh )
 			    errno = EMSGSIZE;  /* For Win32, see portable.h */
 #endif
 			    return( -1 );
@@ -853,13 +853,6 @@ ber_get_next( Sockbuf *sb, ber_len_t *len, BerElement *ber )
 	     * It's this buffer that's passed to all the other ber decoding
 	     * routines.
 	     */
-	  
-#if defined( DOS ) && !( defined( _WIN32 ) || defined(XP_OS2) )
-	    if ( newlen > 65535 ) {	/* DOS can't allocate > 64K */
-		return( LBER_DEFAULT );
-	    }
-#endif /* DOS && !_WIN32 */
-	  
 	    if ( ( sb->sb_options & LBER_SOCKBUF_OPT_MAX_INCOMING_SIZE )
 		 && newlen > sb->sb_max_incoming ) {
 		return( LBER_DEFAULT );
@@ -1447,7 +1440,7 @@ ber_get_next_buffer_ext( void *buffer, size_t buffer_size, ber_len_t *len,
 		
 		if((sock->sb_options & LBER_SOCKBUF_OPT_VALID_TAG) &&
 		   (ber->ber_tag != sock->sb_valid_tag)) {
-#if !defined( macintosh ) && !defined( DOS )
+#if !defined( macintosh )
 			errno = EINVAL;
 #endif
             goto error_exit;
@@ -1493,7 +1486,7 @@ ber_get_next_buffer_ext( void *buffer, size_t buffer_size, ber_len_t *len,
 				
 				noctets = (lc & 0x7f);
 				if ( noctets > sizeof(ber_uint_t) ) {
-#if !defined( macintosh ) && !defined( DOS )
+#if !defined( macintosh )
                     errno = EMSGSIZE;
 #endif
                     *Bytes_Scanned = 0;
@@ -1530,16 +1523,10 @@ ber_get_next_buffer_ext( void *buffer, size_t buffer_size, ber_len_t *len,
 		 * routines.
 		 */
 
-#if defined( DOS ) && !defined( _WIN32 )
-		if ( *len > 65535 ) {	/* DOS can't allocate > 64K */
-			goto premature_exit;
-		}
-#endif /* DOS && !_WIN32 */
-
         if ( (sock != NULL)  &&
 		    ( sock->sb_options & LBER_SOCKBUF_OPT_MAX_INCOMING_SIZE )
                     && (*len > sock->sb_max_incoming) ) {
-#if !defined( macintosh ) && !defined( DOS )
+#if !defined( macintosh )
                     errno = EMSGSIZE;
 #endif
                     *Bytes_Scanned = 0;

@@ -81,17 +81,7 @@ int				nsldapi_initialized = 0;
 
 #ifdef USE_PTHREADS
 #include <pthread.h>
-#ifdef VMS
-/*
-** pthread_self() is not a routine on OpenVMS; it's inline assembler code. 
-** Since we need a real address which we can stuff away into a table, we need 
-** to make sure that pthread_self maps to the real pthread_self routine (yes,
-** we do have one fortunately).
-*/
-#undef pthread_self
-#define pthread_self PTHREAD_SELF
-extern pthread_t pthread_self (void);
-#endif
+
 static pthread_key_t		nsldapi_key;
 static pthread_mutex_t		nsldapi_init_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -589,7 +579,7 @@ ldap_init( const char *defhost, int defport )
 	    LDAPDebug( LDAP_DEBUG_ANY,
 		    "ldap_init: port %d is invalid (port numbers must range from 1 to %d)\n",
 		    defport, LDAP_PORT_MAX, 0 );
-#if !defined( macintosh ) && !defined( DOS ) && !defined( BEOS )
+#if !defined( macintosh )
 	    errno = EINVAL;
 #endif
 	    return( NULL );
