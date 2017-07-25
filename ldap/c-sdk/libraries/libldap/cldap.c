@@ -58,9 +58,6 @@ static char copyright[] = "@(#) Copyright (c) 1990, 1994 Regents of the Universi
 #include <stdlib.h>
 #include "macos.h"
 #else /* macintosh */
-#ifdef DOS
-#include "msdos.h"
-#else /* DOS */
 #ifdef _WINDOWS
 #include <windows.h>
 #else /* _WINDOWS */
@@ -70,7 +67,6 @@ static char copyright[] = "@(#) Copyright (c) 1990, 1994 Regents of the Universi
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* _WINDOWS */
-#endif /* DOS */
 #endif /* macintosh */
 
 #include "ldap-int.h"

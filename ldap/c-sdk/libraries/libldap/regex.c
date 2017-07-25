@@ -35,7 +35,7 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 #include "ldap-int.h"
-#if defined( macintosh ) || defined( DOS ) || defined( _WINDOWS ) || defined( NEED_BSDREGEX ) || defined( XP_OS2)
+#if defined( macintosh ) || defined( _WINDOWS ) || defined( NEED_BSDREGEX )
 #include "regex.h"
 
 /*
@@ -917,4 +917,4 @@ nfadump( REGEXCHAR *ap)
 }
 #endif /* REGEX_DEBUG */
 #endif /* DEBUG */
-#endif /* macintosh or DOS or _WINDOWS or NEED_BSDREGEX */
+#endif /* macintosh or _WINDOWS or NEED_BSDREGEX */

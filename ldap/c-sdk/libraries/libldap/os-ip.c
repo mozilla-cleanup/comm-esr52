@@ -280,7 +280,7 @@ nsldapi_os_connect_with_to(LBER_SOCKET sockfd, struct sockaddr *saptr,
 #else /* NSLDAPI_AVOID_OS_SOCKETS */
 	int		n, error;
 	int		len;
-#if defined(_WINDOWS) || defined(XP_OS2)
+#if defined(_WINDOWS)
 	int		nonblock = 1;
 	int		block = 0;
 #else
@@ -302,8 +302,6 @@ nsldapi_os_connect_with_to(LBER_SOCKET sockfd, struct sockaddr *saptr,
 
 #ifdef _WINDOWS
 	ioctlsocket(sockfd, FIONBIO, &nonblock);
-#elif defined(XP_OS2)
-  ioctl( sockfd, FIONBIO, &nonblock, sizeof(nonblock) );
 #else
 	flags = fcntl(sockfd, F_GETFL, 0);
 	fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
@@ -431,8 +429,6 @@ nsldapi_os_connect_with_to(LBER_SOCKET sockfd, struct sockaddr *saptr,
 done:
 #ifdef _WINDOWS
 	ioctlsocket(sockfd, FIONBIO, &block);
-#elif defined(XP_OS2)
-  ioctl( sockfd, FIONBIO, &nonblock, sizeof(block) );
 #else
 	fcntl(sockfd, F_SETFL, flags);
 #endif /* _WINDOWS */
@@ -454,7 +450,7 @@ nsldapi_os_ioctl( LBER_SOCKET s, int option, int *statusp )
 	return -1;
 #else /* NSLDAPI_AVOID_OS_SOCKETS */
 	int		err;
-#if defined(_WINDOWS) || defined(XP_OS2)
+#if defined(_WINDOWS)
 	u_long		iostatus;
 #endif
 
@@ -466,11 +462,7 @@ nsldapi_os_ioctl( LBER_SOCKET s, int option, int *statusp )
 	iostatus = *(u_long *)statusp;
 	err = ioctlsocket( s, FIONBIO, &iostatus );
 #else
-#ifdef XP_OS2
-	err = ioctl( s, FIONBIO, (caddr_t)&iostatus, sizeof(iostatus) );
-#else
 	err = ioctl( s, FIONBIO, (caddr_t)statusp );
-#endif
 #endif
 
 	return( err );
@@ -1194,7 +1186,7 @@ nsldapi_get_select_table_size( void )
 	static int	tblsize = 0;	/* static */
 
 	if ( tblsize == 0 ) {
-#if defined(_WINDOWS) || defined(XP_OS2)
+#if defined(_WINDOWS)
 		tblsize = FOPEN_MAX; /* ANSI spec. */
 #else
 #ifdef USE_SYSCONF

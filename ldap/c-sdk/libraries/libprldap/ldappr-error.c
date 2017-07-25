@@ -163,9 +163,6 @@ struct prldap_errormap_entry {
 #define ETXTBSY         -1
 #endif /* macintosh */
 
-#ifdef XP_OS2
-#define SOCBASEERR      0
-#endif
 #ifndef ENOTSUP
 #define ENOTSUP         -1
 #endif
@@ -215,12 +212,6 @@ struct prldap_errormap_entry {
 #define EROFS           (SOCBASEERR+30)
 #endif
 
-#ifdef BEOS
-#define ENOTSUP         -1
-#define ENOTBLK         -1
-#define ETXTBSY         -1
-#endif
-
 #if defined(BSDI) || defined(OPENBSD) || defined (NETBSD)
 #define ENOTSUP		-1
 #endif
@@ -230,7 +221,7 @@ struct prldap_errormap_entry {
 #endif
 
 #if defined(__hpux) || defined(_AIX) || defined(OSF1) || defined(DARWIN) || \
-  defined(BEOS) || defined(FREEBSD) || defined(BSDI) || defined(VMS) || \
+  defined(FREEBSD) || defined(BSDI) || defined(VMS) || \
   defined(OPENBSD) || defined(NETBSD)
 #define EDEADLOCK       -1
 #endif

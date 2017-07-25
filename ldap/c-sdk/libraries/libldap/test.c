@@ -48,18 +48,11 @@
 #endif /* THINK_C */
 #include "macos.h"
 #else /* MACOS */
-#if defined( DOS )
-#include "msdos.h"
-#if defined( WINSOCK ) 
-#include "console.h"
-#endif /* WINSOCK */
-#else /* DOS */
 #ifdef _WINDOWS
 #include <windows.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
-//#include "console.h"
 #else /* _WINDOWS */
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -71,7 +64,6 @@
 #include <unistd.h>
 #endif /* VMS */
 #endif /* _WINDOWS */
-#endif /* DOS */
 #endif /* MACOS */
 
 #include "ldap.h"
@@ -580,7 +572,7 @@ main(
 			port = atoi( optarg );
 			break;
 
-#if !defined(MACOS) && !defined(DOS)
+#if !defined(MACOS)
 		case 't':	/* copy ber's to given file */
 			copyfname = strdup( optarg );
 			copyoptions = LBER_SOCKBUF_OPT_TO_FILE;
@@ -634,7 +626,7 @@ main(
 	}
 
 #ifdef notdef
-#if !defined(MACOS) && !defined(DOS)
+#if !defined(MACOS)
 	if ( copyfname != NULL ) {
 		int	fd;
 		Sockbuf	*sb;

@@ -85,7 +85,7 @@ extern "C" {
 /* #  include <sys/varargs.h> */
 #  include <sys/socket.h>
 #  include <netinet/in.h>
-#if !defined(XP_OS2) && !defined(DARWIN)
+#if !defined(DARWIN)
 #  include <unistd.h>
 #endif
 # endif /* defined( _WINDOWS ) */
@@ -103,10 +103,6 @@ extern "C" {
 #include <winsock.h>
 #include <io.h>
 #endif /* _WINDOWS */
-
-#ifdef XP_OS2
-#include <io.h>
-#endif /* XP_OS2 */
 
 /* No stderr in a 16-bit Windows DLL */
 #if defined(_WINDLL) && !defined(_WIN32)

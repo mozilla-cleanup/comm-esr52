@@ -53,7 +53,7 @@ static char copyright[] = "@(#) Copyright (c) 1993 Regents of the University of 
 
 static int break_into_words( char *str, char *delims, char ***wordsp );
 
-#if !defined( macintosh ) && !defined( DOS )
+#if !defined( macintosh )
 extern char	* LDAP_CALL re_comp();
 #endif
 
