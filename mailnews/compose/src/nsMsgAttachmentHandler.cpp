@@ -30,7 +30,9 @@
 #include "nsNetUtil.h"
 #include "nsNativeCharsetUtils.h"
 #include "nsComposeStrings.h"
+#ifdef XP_MACOSX
 #include "nsIZipWriter.h"
+#endif
 #include "nsIDirectoryEnumerator.h"
 #include "mozilla/Services.h"
 #include "mozilla/mailnews/MimeEncoder.h"
