@@ -17,7 +17,6 @@ DIRS += [
     'search',
     'about-support',
     'wintaskbar',
-    'newmailaccount',
     'im',
 ]
 
