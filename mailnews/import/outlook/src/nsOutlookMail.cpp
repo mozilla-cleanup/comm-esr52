@@ -18,6 +18,7 @@
 #include "nsIMutableArray.h"
 #include "nsOutlookStringBundle.h"
 #include "nsABBaseCID.h"
+#include "nsAbMdbCID.h"
 #include "nsIAbCard.h"
 #include "mdb.h"
 #include "OutlookDebugLog.h"

@@ -45,5 +45,5 @@ EXPORTS += [
     'nsAbBaseCID.h',
     'nsAbLdapCID.h',
     'nsAbOsxCID.h',
+    'nsAbMdbCID.h',
 ]
-
