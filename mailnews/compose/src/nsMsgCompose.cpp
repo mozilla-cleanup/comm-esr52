@@ -37,7 +37,6 @@
 #include "nsIRDFService.h"
 #include "nsRDFCID.h"
 #include "nsAbBaseCID.h"
-#include "nsIAbMDBDirectory.h"
 #include "nsCExternalHandlerService.h"
 #include "nsIMIMEService.h"
 #include "nsIDocShellTreeItem.h"
