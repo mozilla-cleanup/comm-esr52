@@ -85,6 +85,7 @@
 #include "nsIProtocolHandler.h"
 #include "nsContentUtils.h"
 #include "nsIFileURL.h"
+#include "nsIAbMDBDirectory.h"
 
 using namespace mozilla;
 using namespace mozilla::mailnews;
