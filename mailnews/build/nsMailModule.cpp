@@ -120,6 +120,9 @@
 #ifdef XP_MACOSX
 #include "nsAbOsxCID.h"
 #endif
+#ifdef MOZ_MAPI_SUPPORT
+#include "nsAbMapiCID.h"
+#endif
 #include "nsAbLdapCID.h"
 #include "nsAbBSDirectory.h"
 #include "nsAbMDBDirectory.h"
