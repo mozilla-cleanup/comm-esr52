@@ -117,6 +117,9 @@
 // addrbook includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "nsAbBaseCID.h"
+#ifdef XP_MACOSX
+#include "nsAbOsxCID.h"
+#endif
 #include "nsAbLdapCID.h"
 #include "nsAbBSDirectory.h"
 #include "nsAbMDBDirectory.h"
