@@ -41,4 +41,3 @@ private:
 };
 
 #endif  // _nsAbAddressCollector_H_
-

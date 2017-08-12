@@ -87,7 +87,7 @@ interface nsIAbBooleanConditionString : nsISupports
      *
      * <name> [condition] value
      *
-     */ 
+     */
     attribute wstring value;
 };
 
@@ -119,4 +119,3 @@ interface nsIAbBooleanExpression: nsISupports
      */
     attribute nsIArray expressions;
 };
-

@@ -43,15 +43,15 @@ nsresult nsAbBSDirectory::CreateDirectoriesFromFactory(const nsACString &aURI,
   nsresult rv;
 
   // Get the directory factory service
-  nsCOMPtr<nsIAbDirFactoryService> dirFactoryService = 
+  nsCOMPtr<nsIAbDirFactoryService> dirFactoryService =
     do_GetService(NS_ABDIRFACTORYSERVICE_CONTRACTID,&rv);
   NS_ENSURE_SUCCESS (rv, rv);
-		
+
   // Get the directory factory from the URI
   nsCOMPtr<nsIAbDirFactory> dirFactory;
   rv = dirFactoryService->GetDirFactory(aURI, getter_AddRefs(dirFactory));
   NS_ENSURE_SUCCESS (rv, rv);
-  
+
   // Create the directories
   nsCOMPtr<nsISimpleEnumerator> newDirEnumerator;
   rv = dirFactory->GetDirectories(NS_ConvertUTF8toUTF16(aServer->description),
@@ -59,7 +59,7 @@ nsresult nsAbBSDirectory::CreateDirectoriesFromFactory(const nsACString &aURI,
                                   nsDependentCString(aServer->prefName),
                                   getter_AddRefs(newDirEnumerator));
   NS_ENSURE_SUCCESS (rv, rv);
-  
+
   // Enumerate through the directories adding them
   // to the sub directories array
   bool hasMore;
@@ -71,11 +71,11 @@ nsresult nsAbBSDirectory::CreateDirectoriesFromFactory(const nsACString &aURI,
     rv = newDirEnumerator->GetNext(getter_AddRefs(newDirSupports));
     if(NS_FAILED(rv))
       continue;
-    
-    nsCOMPtr<nsIAbDirectory> childDir = do_QueryInterface(newDirSupports, &rv); 
+
+    nsCOMPtr<nsIAbDirectory> childDir = do_QueryInterface(newDirSupports, &rv);
     if(NS_FAILED(rv))
       continue;
-    
+
     // Define a relationship between the preference
     // entry and the directory
     mServers.Put(childDir, aServer);
@@ -85,7 +85,7 @@ nsresult nsAbBSDirectory::CreateDirectoriesFromFactory(const nsACString &aURI,
     if (aNotify && abManager)
       abManager->NotifyDirectoryItemAdded(this, childDir);
   }
-  
+
   return NS_OK;
 }
 
@@ -103,19 +103,19 @@ nsresult nsAbBSDirectory::EnsureInitialized()
     return NS_OK;
 
   nsresult rv;
-  nsCOMPtr<nsIAbDirFactoryService> dirFactoryService = 
+  nsCOMPtr<nsIAbDirFactoryService> dirFactoryService =
     do_GetService(NS_ABDIRFACTORYSERVICE_CONTRACTID,&rv);
   NS_ENSURE_SUCCESS (rv, rv);
-    
+
   nsTArray<DIR_Server*> *directories = DIR_GetDirectories();
   if (!directories)
     return NS_ERROR_FAILURE;
-    
+
   int32_t count = directories->Length();
   for (int32_t i = 0; i < count; i++)
   {
     DIR_Server *server = directories->ElementAt(i);
-      
+
     // if this is a 4.x, local .na2 addressbook (PABDirectory)
     // we must skip it.
     // mozilla can't handle 4.x .na2 addressbooks
@@ -123,30 +123,30 @@ nsresult nsAbBSDirectory::EnsureInitialized()
     // (we used the .na2 file for replication), and we don't want to skip
     // those.  see bug #127007
     uint32_t fileNameLen = strlen(server->fileName);
-    if (((fileNameLen > kABFileName_PreviousSuffixLen) && 
+    if (((fileNameLen > kABFileName_PreviousSuffixLen) &&
       strcmp(server->fileName + fileNameLen - kABFileName_PreviousSuffixLen,
              kABFileName_PreviousSuffix) == 0) &&
       (server->dirType == PABDirectory))
       continue;
-      
+
     // Set the uri property
     nsAutoCString URI (server->uri);
     // This is in case the uri is never set
     // in the nsDirPref.cpp code.
-    if (!server->uri) 
+    if (!server->uri)
     {
       URI = NS_LITERAL_CSTRING(kMDBDirectoryRoot);
       URI += nsDependentCString(server->fileName);
     }
-      
+
     /*
      * Check that we are not converting from a
      * a 4.x address book file e.g. pab.na2
      * check if the URI ends with ".na2"
      */
-    if (StringEndsWith(URI, NS_LITERAL_CSTRING(kABFileName_PreviousSuffix))) 
+    if (StringEndsWith(URI, NS_LITERAL_CSTRING(kABFileName_PreviousSuffix)))
       URI.Replace(kMDBDirectoryRootLen, URI.Length() - kMDBDirectoryRootLen, server->fileName);
-      
+
     // Create the directories
     rv = CreateDirectoriesFromFactory(URI, server, false /* notify */);
 
@@ -156,7 +156,7 @@ nsresult nsAbBSDirectory::EnsureInitialized()
     if (NS_FAILED(rv))
       NS_WARNING("CreateDirectoriesFromFactory failed - Invalid factory?");
   }
-    
+
   mInitialized = true;
   // sort directories by position...
   return NS_OK;
@@ -176,7 +176,7 @@ NS_IMETHODIMP nsAbBSDirectory::CreateNewDirectory(const nsAString &aDirName,
    * This procedure is still MDB specific
    * due to the dependence on the current
    * nsDirPref.cpp code
-	 */
+   */
 
   nsCString URI(aURI);
 
@@ -193,7 +193,7 @@ NS_IMETHODIMP nsAbBSDirectory::CreateNewDirectory(const nsAString &aDirName,
   rv = DIR_AddNewAddressBook(aDirName, EmptyCString(), URI,
                              (DirectoryType)aType, aPrefName, &server);
   NS_ENSURE_SUCCESS (rv, rv);
-  
+
   if (aType == PABDirectory) {
     // Add the URI property
     URI.AssignLiteral(kMDBDirectoryRoot);
@@ -224,7 +224,7 @@ NS_IMETHODIMP nsAbBSDirectory::CreateDirectoryByURI(const nsAString &aDisplayNam
 
   rv = CreateDirectoriesFromFactory(aURI, server, true /* notify */);
   NS_ENSURE_SUCCESS(rv,rv);
-	return rv;
+  return rv;
 }
 
 NS_IMETHODIMP nsAbBSDirectory::DeleteDirectory(nsIAbDirectory *directory)
@@ -257,7 +257,7 @@ NS_IMETHODIMP nsAbBSDirectory::DeleteDirectory(nsIAbDirectory *directory)
 
   DIR_DeleteServerFromList(server);
 
-  nsCOMPtr<nsIAbDirFactoryService> dirFactoryService = 
+  nsCOMPtr<nsIAbDirFactoryService> dirFactoryService =
     do_GetService(NS_ABDIRFACTORYSERVICE_CONTRACTID,&rv);
   NS_ENSURE_SUCCESS (rv, rv);
 
@@ -320,4 +320,3 @@ NS_IMETHODIMP nsAbBSDirectory::GetURI(nsACString &aURI)
   aURI = mURI;
   return NS_OK;
 }
-

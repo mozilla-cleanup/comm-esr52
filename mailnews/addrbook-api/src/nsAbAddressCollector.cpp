@@ -5,7 +5,6 @@
 
 #include "msgCore.h"  // for pre-compiled headers
 #include "nsISimpleEnumerator.h"
-
 #include "nsIAbCard.h"
 #include "nsAbBaseCID.h"
 #include "nsAbAddressCollector.h"
@@ -206,7 +205,7 @@ nsAbAddressCollector::AutoCollectScreenName(nsIAbCard *aCard,
 
   if (domain.IsEmpty())
     return;
-  // username in 
+  // username in
   // username@aol.com (America Online)
   // username@cs.com (Compuserve)
   // username@netscape.net (Netscape webmail)
