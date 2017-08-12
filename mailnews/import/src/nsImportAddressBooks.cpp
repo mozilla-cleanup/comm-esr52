@@ -19,6 +19,7 @@
 #include "nsIAbManager.h"
 #include "nsIAbLDIFService.h"
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 #include "nsIStringBundle.h"
 #include "nsImportStringBundle.h"
 #include "nsTextFormatter.h"

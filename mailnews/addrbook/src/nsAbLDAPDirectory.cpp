@@ -8,6 +8,7 @@
 #include "nsAbQueryStringToExpression.h"
 
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 #include "nsIAbManager.h"
 #include "nsServiceManagerUtils.h"
 #include "nsComponentManagerUtils.h"

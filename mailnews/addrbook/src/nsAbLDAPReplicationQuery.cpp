@@ -10,6 +10,7 @@
 #include "nsAbLDAPReplicationData.h"
 #include "nsILDAPURL.h"
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 #include "nsAbUtils.h"
 #include "nsDirPrefs.h"
 #include "prmem.h"

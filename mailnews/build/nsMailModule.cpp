@@ -117,6 +117,7 @@
 // addrbook includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 #include "nsAbBSDirectory.h"
 #include "nsAbMDBDirectory.h"
 #include "nsAbMDBCard.h"

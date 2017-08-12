@@ -7,6 +7,7 @@
 #include "nsAbLDAPReplicationService.h"
 #include "nsAbLDAPReplicationQuery.h"
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 #include "nsIWebProgressListener.h"
 #include "nsComponentManagerUtils.h"
 #include "nsServiceManagerUtils.h"

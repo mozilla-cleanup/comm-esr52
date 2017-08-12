@@ -13,6 +13,7 @@
 #include "prprf.h"
 #include "nsDirPrefs.h"
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 
 
 // The tables below were originally in nsAbLDAPProperties.cpp, which has since

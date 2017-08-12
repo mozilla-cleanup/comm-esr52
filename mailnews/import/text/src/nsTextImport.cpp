@@ -27,6 +27,7 @@
 #include "nsIAddrDatabase.h"
 #include "nsIAbLDIFService.h"
 #include "nsAbBaseCID.h"
+#include "nsAbLdapCID.h"
 #include "nsTextFormatter.h"
 #include "nsImportStringBundle.h"
 #include "nsTextAddress.h"
