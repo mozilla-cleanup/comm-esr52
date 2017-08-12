@@ -18,7 +18,8 @@
 #include "nsIServiceManager.h"
 #include "nsIImportService.h"
 #include "nsIImportFieldMap.h"
-#include "nsABBaseCID.h"
+#include "nsAbBaseCID.h"
+#include "nsAbMdbCID.h"
 #include "nsIAbCard.h"
 #include "prprf.h"
 

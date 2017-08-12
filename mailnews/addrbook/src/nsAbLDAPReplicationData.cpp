@@ -7,6 +7,7 @@
 #include "nsAbLDAPReplicationData.h"
 #include "nsIAbCard.h"
 #include "nsAbBaseCID.h"
+#include "nsAbMdbCID.h"
 #include "nsAbUtils.h"
 #include "nsAbLDAPReplicationQuery.h"
 #include "nsILDAPErrors.h"

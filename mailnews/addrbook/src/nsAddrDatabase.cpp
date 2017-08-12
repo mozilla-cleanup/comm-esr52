@@ -10,6 +10,7 @@
 #include "nsAutoPtr.h"
 #include "nsUnicharUtils.h"
 #include "nsAbBaseCID.h"
+#include "nsAbMdbCID.h"
 #include "nsIAbMDBDirectory.h"
 #include "nsServiceManagerUtils.h"
 #include "nsComponentManagerUtils.h"

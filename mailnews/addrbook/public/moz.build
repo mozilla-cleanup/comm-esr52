@@ -44,6 +44,6 @@ XPIDL_MODULE = 'addrbook'
 EXPORTS += [
     'nsAbBaseCID.h',
     'nsAbLdapCID.h',
+    'nsAbMdbCID.h',
     'nsAbOsxCID.h',
 ]
-

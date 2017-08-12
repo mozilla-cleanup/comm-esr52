@@ -7,6 +7,7 @@
 #include "nsStringGlue.h"
 #include "nsCOMPtr.h"
 #include "nsAbBaseCID.h"
+#include "nsAbMdbCID.h"
 #include "nsAddrDatabase.h"
 #include "nsIAbListener.h"
 #include "nsIAbManager.h"
