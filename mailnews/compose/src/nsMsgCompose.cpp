@@ -3677,13 +3677,6 @@ NS_IMETHODIMP nsMsgCompose::OnGetDraftFolderURI(const char *aFolderURI)
 NS_IMPL_ADDREF(nsMsgComposeSendListener)
 NS_IMPL_RELEASE(nsMsgComposeSendListener)
 
-/*
-NS_IMPL_QUERY_INTERFACE(nsMsgComposeSendListener,
-                         nsIMsgComposeSendListener,
-                         nsIMsgSendListener,
-                         nsIMsgCopyServiceListener,
-                         nsIWebProgressListener)
-*/
 NS_INTERFACE_MAP_BEGIN(nsMsgComposeSendListener)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIMsgComposeSendListener)
   NS_INTERFACE_MAP_ENTRY(nsIMsgComposeSendListener)
