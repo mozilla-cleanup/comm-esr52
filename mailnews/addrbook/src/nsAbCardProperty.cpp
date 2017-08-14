@@ -164,6 +164,19 @@ NS_IMETHODIMP nsAbCardProperty::SetLocalId(const nsACString &aLocalId)
   return NS_OK;
 }
 
+/* attribute ACString directoryURI; */
+NS_IMETHODIMP nsAbCardProperty::GetDirectoryURI(nsACString & aDirectoryURI)
+{
+    aDirectoryURI = m_directoryURI;
+    return NS_OK;
+}
+
+NS_IMETHODIMP nsAbCardProperty::SetDirectoryURI(const nsACString & aDirectoryURI)
+{
+    m_directoryURI = aDirectoryURI;
+    return NS_OK;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 NS_IMETHODIMP nsAbCardProperty::GetIsMailList(bool *aIsMailList)

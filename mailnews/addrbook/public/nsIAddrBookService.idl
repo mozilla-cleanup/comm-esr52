@@ -1,0 +1,55 @@
+/* -*- Mode: IDL; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+#include "nsIAbListener.idl"
+
+//interface mozIDOMWindowProxy;
+interface nsIAbDirectory;
+interface nsIAbCard;
+//interface nsIAbDirectoryProperties;
+//interface nsISimpleEnumerator;
+//interface nsIAbBooleanExpression;
+interface nsIArray;
+interface nsIMutableArray;
+
+/**
+ * nsIAbService is the frontend interface to the address book service
+ * for other subsystems, eg. composer (later also for the address book GUI),
+ * via the contract id "@mozilla.org/abservice;1"
+ *
+ * The idea is completely isolating all the internals, eg. actual data
+ * sources from its clients.
+ *
+ * It's operations shall be very high level, for two reasons:
+ * a) better isolation between datasources and clients
+ * b) allow datasource specific optimizations (eg. server-side filtering and
+ *    alias/list resolution, etc)
+ */
+[scriptable, uuid(ea0d8b3d-a549-4666-82d8-3a82cee2a3f1)]
+interface nsIAddrBookService : nsISupports
+{
+    nsIArray FindRecipients(in AString name);
+
+    void FillRecipients(in AString name, in nsIMutableArray list);
+
+    /**
+     * get nsIAbDirectory forr given nsIAbCard
+     *
+     * @param  aCard      The cards for which parent directory shall be found.
+     * @return            The found directory.
+     */
+    nsIAbDirectory GetCardDirectory(in nsIAbCard aCard);
+
+    /**
+     * Returns the directory that represents the supplied URI.
+     *
+     * @param  aURI       The URI of the address book to find.
+     * @return            The found address book.
+     */
+    nsIAbDirectory getDirectory(in ACString aURI);
+
+    void FlushCache();
+};

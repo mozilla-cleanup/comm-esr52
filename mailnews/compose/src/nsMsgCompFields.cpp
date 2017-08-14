@@ -632,6 +632,8 @@ nsresult nsMsgCompFields::SplitRecipientsEx(const nsAString &recipients,
     nsMsgRecipient msgRecipient;
     msgRecipient.mEmail = addresses[i];
     msgRecipient.mName = names[i];
+    printf("SplitRecipientsEx: %d name=%s\n", i, ToNewUTF8String(msgRecipient.mName));
+    printf("                      email=%s\n", ToNewUTF8String(msgRecipient.mEmail));
     aResult.AppendElement(msgRecipient);
   }
 

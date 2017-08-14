@@ -44,7 +44,7 @@ protected:
   // Store most of the properties here
   nsInterfaceHashtable<nsCStringHashKey, nsIVariant> m_properties;
 
-  nsCString m_directoryId, m_localId;
+  nsCString m_directoryId, m_localId, m_directoryURI;
 private:
   nsresult AppendSection(const AppendItem *aArray, int16_t aCount, const nsString& aHeading, nsIStringBundle *aBundle, mozITXTToHTMLConv *aConv, nsString &aResult);
   nsresult AppendLine(const AppendItem &aItem, mozITXTToHTMLConv *aConv, nsString &aResult);

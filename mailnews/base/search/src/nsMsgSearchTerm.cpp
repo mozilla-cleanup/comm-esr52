@@ -40,7 +40,7 @@
 #include "nsIMsgFilterService.h"
 #include "nsIMsgPluggableStore.h"
 #include "nsAbBaseCID.h"
-#include "nsIAbManager.h"
+#include "nsIAddrBookService.h"
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/mailnews/MimeHeaderParser.h"
 
@@ -1022,10 +1022,10 @@ nsresult nsMsgSearchTerm::InitializeAddressBook()
   }
   if (!mDirectory)
   {
-    nsCOMPtr<nsIAbManager> abManager = do_GetService(NS_ABMANAGER_CONTRACTID, &rv);
+    nsCOMPtr<nsIAddrBookService> abService = do_GetService(NS_ADDRBOOK_SERVICE_CONTRACTID, &rv);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    rv = abManager->GetDirectory(nsDependentCString(m_value.string), getter_AddRefs(mDirectory));
+    rv = abService->GetDirectory(nsDependentCString(m_value.string), getter_AddRefs(mDirectory));
     NS_ENSURE_SUCCESS(rv, rv);
   }
 

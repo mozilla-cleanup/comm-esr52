@@ -31,7 +31,7 @@
 #include "nsISimpleEnumerator.h"
 #include "nsIDirectoryEnumerator.h"
 #include "nsAbBaseCID.h"
-#include "nsIAbManager.h"
+#include "nsIAddrBookService.h"
 #include "nsIMsgAccountManager.h"
 #include "nsMsgBaseCID.h"
 
@@ -317,7 +317,7 @@ NS_IMETHODIMP nsSpamSettings::Initialize(nsIMsgIncomingServer *aServer)
   mWhiteListDirArray.Clear();
   if (!mWhiteListAbURI.IsEmpty())
   {
-    nsCOMPtr<nsIAbManager> abManager(do_GetService(NS_ABMANAGER_CONTRACTID, &rv));
+    nsCOMPtr<nsIAddrBookService> abService(do_GetService(NS_ADDRBOOK_SERVICE_CONTRACTID, &rv));
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsTArray<nsCString> whiteListArray;
@@ -326,7 +326,7 @@ NS_IMETHODIMP nsSpamSettings::Initialize(nsIMsgIncomingServer *aServer)
     for (uint32_t index = 0; index < whiteListArray.Length(); index++)
     {
       nsCOMPtr<nsIAbDirectory> directory;
-      rv = abManager->GetDirectory(whiteListArray[index],
+      rv = abService->GetDirectory(whiteListArray[index],
                                    getter_AddRefs(directory));
       NS_ENSURE_SUCCESS(rv, rv);
 

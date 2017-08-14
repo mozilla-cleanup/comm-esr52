@@ -86,6 +86,11 @@ interface nsIAbCard : nsIAbItem {
   attribute AUTF8String directoryId;
 
   /**
+   * The URI of the directory this card comes from
+   */
+  attribute ACString directoryURI;
+
+  /**
    * The per-directory ID of this card.
    *
    * This property is the second part of the tuple logically representing a card

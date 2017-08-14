@@ -137,7 +137,7 @@
 #include "nsAbAddressCollector.h"
 #include "nsAddbookProtocolHandler.h"
 #include "nsAddbookUrl.h"
-
+#include "nsAddrBookService.h"
 #include "nsAbDirectoryQuery.h"
 #include "nsAbBooleanExpression.h"
 #include "nsAbDirectoryQueryProxy.h"
@@ -463,6 +463,7 @@ NS_DEFINE_NAMED_CID(NS_MAILNEWSDLF_CID);
 ////////////////////////////////////////////////////////////////////////////////
 // addrbook factories
 ////////////////////////////////////////////////////////////////////////////////
+NS_GENERIC_FACTORY_CONSTRUCTOR(nsAddrBookService);
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsAbManager,Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsAbContentHandler)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsAbDirProperty)
@@ -513,6 +514,7 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsAbOSXCard)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsAbOSXDirFactory)
 #endif
 
+NS_DEFINE_NAMED_CID(NS_IADDRBOOKSERVICE_IID);
 NS_DEFINE_NAMED_CID(NS_ABMANAGER_CID);
 NS_DEFINE_NAMED_CID(NS_ABDIRECTORY_CID);
 NS_DEFINE_NAMED_CID(NS_ABMDBDIRECTORY_CID);
@@ -944,6 +946,7 @@ const mozilla::Module::CIDEntry kMailNewsCIDs[] = {
   { &kNS_STOPWATCH_CID, false, NULL, nsStopwatchConstructor},
   { &kNS_MAILNEWSDLF_CID, false, NULL, MailNewsDLFConstructor},
   // Address Book Entries
+  { &kNS_IADDRBOOKSERVICE_IID, false, NULL, nsAddrBookServiceConstructor },
   { &kNS_ABMANAGER_CID, false, NULL, nsAbManagerConstructor },
   { &kNS_ABDIRECTORY_CID, false, NULL, nsAbBSDirectoryConstructor },
   { &kNS_ABMDBDIRECTORY_CID, false, NULL, nsAbMDBDirectoryConstructor },
@@ -1162,6 +1165,7 @@ const mozilla::Module::ContractIDEntry kMailNewsContracts[] = {
   { NS_STOPWATCH_CONTRACTID, &kNS_STOPWATCH_CID },
   { NS_MAILNEWSDLF_CONTRACTID, &kNS_MAILNEWSDLF_CID },
   // Address Book Entries
+  { NS_ADDRBOOK_SERVICE_CONTRACTID, &kNS_IADDRBOOKSERVICE_IID },
   { NS_ABMANAGER_CONTRACTID, &kNS_ABMANAGER_CID },
   { NS_ABMANAGERSTARTUPHANDLER_CONTRACTID, &kNS_ABMANAGER_CID },
   { NS_ABDIRECTORY_CONTRACTID, &kNS_ABDIRECTORY_CID },

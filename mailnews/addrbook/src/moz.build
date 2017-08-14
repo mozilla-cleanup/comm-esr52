@@ -29,6 +29,7 @@ SOURCES += [
     'nsAbView.cpp',
     'nsAddbookProtocolHandler.cpp',
     'nsAddbookUrl.cpp',
+    'nsAddrBookService.cpp',
     'nsAddrDatabase.cpp',
     'nsDirPrefs.cpp',
     'nsMsgVCardService.cpp',

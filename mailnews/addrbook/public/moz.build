@@ -24,6 +24,7 @@ XPIDL_SOURCES += [
     'nsIAbMDBDirectory.idl',
     'nsIAbView.idl',
     'nsIAddbookUrl.idl',
+    'nsIAddrBookService.idl',
     'nsIAddrDatabase.idl',
     'nsIAddrDBAnnouncer.idl',
     'nsIAddrDBListener.idl',

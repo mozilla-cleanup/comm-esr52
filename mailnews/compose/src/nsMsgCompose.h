@@ -80,9 +80,6 @@ protected:
  protected:
   nsresult CreateMessage(const char * originalMsgURI, MSG_ComposeType type, nsIMsgCompFields* compFields);
   void CleanUpRecipients(nsString& recipients);
-  nsresult GetABDirAndMailLists(const nsACString& aDirUri,
-                                nsCOMArray<nsIAbDirectory>& aDirArray,
-                                nsTArray<nsMsgMailList>& aMailListArray);
   nsresult ResolveMailList(nsIAbDirectory* aMailList,
                            nsCOMArray<nsIAbDirectory>& allDirectoriesArray,
                            nsTArray<nsMsgMailList>& allMailListArray,

@@ -209,4 +209,8 @@
 #define NS_MSGVCARDSERVICE_CONTRACTID \
  "@mozilla.org/addressbook/msgvcardservice;1"
 
+// nsAddrBookService
+#define NS_ADDRBOOK_SERVICE_CONTRACTID \
+    "@mozilla.org/addressbook/addrbookservice;1"
+
 #endif // nsAbBaseCID_h__
