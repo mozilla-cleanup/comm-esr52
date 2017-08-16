@@ -37,10 +37,10 @@ nsAddrBookService::~nsAddrBookService()
 
 /**
  * Fill the mailing list members into recipient list
- */ 
+ */
 static nsresult fillMailListRecipients(nsCOMPtr<nsIAbDirectory> ml, nsCOMPtr<nsIMutableArray> list, int depth)
 {
-    /** FIXME: check for potential infinite recursion **/  
+    /** FIXME: check for potential infinite recursion **/
     if (depth > 10) {
         printf("fillMailListRecipients() recursing too deep\n");
         return NS_ERROR_ABORT;
@@ -71,7 +71,7 @@ static nsresult fillMailListRecipients(nsCOMPtr<nsIAbDirectory> ml, nsCOMPtr<nsI
     /** process cards **/
     nsCOMPtr<nsISimpleEnumerator> cards;
     if (NS_SUCCEEDED(ml->GetChildCards(getter_AddRefs(cards))) && cards)
-    {    
+    {
         bool hasMore;
         while (NS_SUCCEEDED(cards->HasMoreElements(&hasMore)) && hasMore)
         {
@@ -87,13 +87,13 @@ static nsresult fillMailListRecipients(nsCOMPtr<nsIAbDirectory> ml, nsCOMPtr<nsI
             list->AppendElement(cardwalk, false);
         }
     }
-    
+
     return NS_OK;
 }
 
-/* 
- * Fill specified contact(s) into array, w/ resolving mailing lists / aliases 
- * 
+/*
+ * Fill specified contact(s) into array, w/ resolving mailing lists / aliases
+ *
  * TODO: do direct lookups instead of list scanning when possible
  * TODO: should have an indexed cache
  */
@@ -116,16 +116,16 @@ static nsresult fillRecipients(nsCOMPtr<nsIAbDirectory> directory, const nsAStri
     /** is this the maillist we're looking for ? **/
     if (isML) {
         if (addr.Equals(dir_name)) {
-            /* TODO: add to cache */ 
+            /* TODO: add to cache */
             return fillMailListRecipients(directory, list, 0);
         }
-        return NS_OK; 
+        return NS_OK;
     }
 
-    /** process sub directories and maillists **/ 
+    /** process sub directories and maillists **/
     nsCOMPtr<nsISimpleEnumerator> sub;
     if (NS_SUCCEEDED(directory->GetChildNodes(getter_AddRefs(sub))) && sub)
-    {    
+    {
         bool hasMore;
         while (NS_SUCCEEDED(sub->HasMoreElements(&hasMore)) && hasMore)
         {
@@ -142,11 +142,11 @@ static nsresult fillRecipients(nsCOMPtr<nsIAbDirectory> directory, const nsAStri
                 printf("recursive fillRecipients() failed\n");
         }
     }
-    
+
     /** process cards **/
     nsCOMPtr<nsISimpleEnumerator> cards;
     if (NS_SUCCEEDED(directory->GetChildCards(getter_AddRefs(cards))) && cards)
-    {    
+    {
         bool hasMore;
         while (NS_SUCCEEDED(cards->HasMoreElements(&hasMore)) && hasMore)
         {
@@ -163,7 +163,7 @@ static nsresult fillRecipients(nsCOMPtr<nsIAbDirectory> directory, const nsAStri
             if (email.Equals(addr)) {
                 list->AppendElement(cardwalk, false);
                 cardwalk->SetDirectoryURI(dir_uri);
-                /* TODO: put it into cache */ 
+                /* TODO: put it into cache */
             }
         }
     }
