@@ -5021,11 +5021,8 @@ nsMsgCompose::ExpandMailingLists()
          *        so updated card won't be written back to the directory */
         bool readOnly = false;
         if (recipient.mDirectory != nullptr) {
-          printf("ExpandMailingLists() recipient has directory\n"); 
           rv = recipient.mDirectory->GetReadOnly(&readOnly);
           NS_ENSURE_SUCCESS(rv, rv);
-        } else {
-          printf("ExpandMailingLists() recipient missing directory\n"); 
         }
 
         // Bump the popularity index for this card since we are about to send
