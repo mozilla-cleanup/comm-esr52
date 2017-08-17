@@ -4987,6 +4987,93 @@ nsMsgCompose::LookupAddressBook(RecipientsArray &recipientsList)
   return rv;
 }
 
+NS_IMETHODIMP
+nsMsgCompose::ExpandMailingLists()
+{
+  RecipientsArray recipientsList;
+  nsresult rv = LookupAddressBook(recipientsList);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Reset the final headers with the expanded mailing lists.
+  nsAutoString recipientsStr;
+
+  for (int i = 0; i < MAX_OF_RECIPIENT_ARRAY; ++i)
+  {
+    uint32_t nbrRecipients = recipientsList[i].Length();
+    if (nbrRecipients == 0)
+      continue;
+    recipientsStr.Truncate();
+
+    // Note: We check this each time to allow for length changes.
+    for (uint32_t j = 0; j < recipientsList[i].Length(); ++j)
+    {
+      nsMsgRecipient &recipient = recipientsList[i][j];
+
+      if (!recipientsStr.IsEmpty())
+        recipientsStr.Append(char16_t(','));
+      nsAutoString address;
+      MakeMimeAddress(recipient.mName, recipient.mEmail, address);
+      recipientsStr.Append(address);
+
+      if (recipient.mCard)
+      {
+        /* FIXME: the new LookupAddressBook() doesn't retrieve the directory yet,
+         *        so updated card won't be written back to the directory */
+        bool readOnly = false;
+        if (recipient.mDirectory != nullptr) {
+          printf("ExpandMailingLists() recipient has directory\n"); 
+          rv = recipient.mDirectory->GetReadOnly(&readOnly);
+          NS_ENSURE_SUCCESS(rv, rv);
+        } else {
+          printf("ExpandMailingLists() recipient missing directory\n"); 
+        }
+
+        // Bump the popularity index for this card since we are about to send
+        // e-mail to it.
+        if (!readOnly)
+        {
+          uint32_t popularityIndex = 0;
+          if (NS_FAILED(recipient.mCard->GetPropertyAsUint32(
+                kPopularityIndexProperty, &popularityIndex)))
+          {
+            // TB 2 wrote the popularity value as hex, so if we get here,
+            // then we've probably got a hex value. We'll convert it back
+            // to decimal, as that's the best we can do.
+
+            nsCString hexPopularity;
+            if (NS_SUCCEEDED(recipient.mCard->GetPropertyAsAUTF8String(
+                kPopularityIndexProperty, hexPopularity)))
+            {
+              nsresult errorCode = NS_OK;
+              popularityIndex = hexPopularity.ToInteger(&errorCode, 16);
+              if (NS_FAILED(errorCode))
+                // We failed, just set it to zero.
+                popularityIndex = 0;
+            }
+            else
+              // We couldn't get it as a string either, so just reset to zero.
+              popularityIndex = 0;
+          }
+
+          recipient.mCard->SetPropertyAsUint32(kPopularityIndexProperty,
+                                               ++popularityIndex);
+          if (recipient.mDirectory != nullptr)
+            recipient.mDirectory->ModifyCard(recipient.mCard);
+        }
+      }
+    }
+
+    switch (i)
+    {
+    case 0: m_compFields->SetTo(recipientsStr);  break;
+    case 1: m_compFields->SetCc(recipientsStr);  break;
+    case 2: m_compFields->SetBcc(recipientsStr); break;
+    }
+  }
+
+  return NS_OK;
+}
+
 /**
  * This function implements the decision logic for delivery format 'Auto-Detect',
  * including optional 'Auto-Downgrade' behaviour for HTML messages considered
