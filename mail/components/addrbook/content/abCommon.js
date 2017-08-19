@@ -80,9 +80,7 @@ var DirPaneController =
         }
 
         // If it's one of these special ABs, return false to disable deletion.
-        if (selectedDirURI == kPersonalAddressbookURI ||
-            selectedDirURI == kCollectedAddressbookURI ||
-            selectedDirURI == (kAllDirectoryRoot + "?"))
+        if (!selectedDir.canDelete)
           return false;
 
         // If the directory is a mailing list, and it is read-only,
