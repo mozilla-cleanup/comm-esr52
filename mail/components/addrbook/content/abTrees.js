@@ -18,12 +18,12 @@ function getDirectoryValue(aDir, aKey) {
   const Ci = Components.interfaces;
 
   if (aKey == "ab_type") {
-    if (aDir._directory.URI == kAllDirectoryRoot + "?")
-      return "aab";
-    if (aDir._directory.URI == kPersonalAddressbookURI)
+    if (aDir._directory.isPersonal)
       return "pab";
-    if (aDir._directory.URI == kCollectedAddressbookURI)
+    if (aDir._directory.isCollected)
       return "cab";
+    if (aDir._directory.isRoot)
+      return "aab";
     if (aDir._directory instanceof Ci.nsIAbMDBDirectory)
       return "mork";
     if (aDir._directory instanceof Ci.nsIAbLDAPDirectory)

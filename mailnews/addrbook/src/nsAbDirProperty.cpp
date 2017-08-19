@@ -264,6 +264,10 @@ nsAbDirProperty::Init(const char *aURI)
   mURI = aURI;
   mIsValidURI = true;
 
+  m_IsRoot = mURI.Equals(kAllDirectoryRoot "?");
+  m_IsPersonal = mURI.Equals(kPersonalAddressbookUri);
+  m_IsCollected = mURI.Equals(kCollectedAddressbookUri);
+
   int32_t searchCharLocation = mURINoQuery.FindChar('?');
   if (searchCharLocation >= 0)
   {
@@ -590,4 +594,43 @@ NS_IMETHODIMP nsAbDirProperty::SetLocalizedStringValue(const char *aName,
   return m_DirectoryPrefs->SetComplexValue(aName,
                                            NS_GET_IID(nsIPrefLocalizedString),
                                            locStr);
+}
+
+/* attribute boolean isPersonal; */
+NS_IMETHODIMP nsAbDirProperty::GetIsPersonal(bool *aIsPersonal)
+{
+  *aIsPersonal = m_IsPersonal;
+  return NS_OK;
+}
+
+/* attribute boolean isCollected; */
+NS_IMETHODIMP nsAbDirProperty::GetIsCollected(bool *aIsCollected)
+{
+  *aIsCollected = m_IsCollected;
+  return NS_OK;
+}
+
+/* attribute boolean isRoot; */
+NS_IMETHODIMP nsAbDirProperty::GetIsRoot(bool *aIsRoot)
+{
+  *aIsRoot = m_IsRoot;
+  return NS_OK;
+}
+
+/* attribute boolean canDelete; */
+NS_IMETHODIMP nsAbDirProperty::GetCanDelete(bool *aCanDelete)
+{
+  // if it's an mailing list and readonly, it cannot be deleted
+  if (m_IsMailList) {
+    bool ro = false;
+    GetReadOnly(&ro);
+    *aCanDelete = !ro;
+    return NS_OK;
+  }
+
+  // FIXME: add LDAP handling
+
+  // deny deletion of special mailboxes, allow others
+  *aCanDelete = (!m_IsPersonal) && (!m_IsCollected) && (!m_IsRoot);
+  return NS_OK;
 }

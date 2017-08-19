@@ -167,10 +167,10 @@ directoryTreeView.prototype =
     {
       if (aKey == "ab_type")
       {
-        if (aDir._directory.URI == kPersonalAddressbookURI)
-          return "pab";
-        if (aDir._directory.URI == kCollectedAddressbookURI)
-          return "cab";
+        if (aDir._directory.isPersonal)
+            return "pab";
+        if (aDir._directory.isCollected)
+            return "cab";
         if (aDir._directory instanceof Components.interfaces.nsIAbMDBDirectory)
           return "mork";
         if ("nsIAbLDAPDirectory" in Components.interfaces &&

@@ -52,6 +52,9 @@ protected:
 	nsString m_ListNickName;
 	nsString m_Description;
 	bool     m_IsMailList;
+  bool m_IsPersonal;
+  bool m_IsCollected;
+  bool m_IsRoot;
 
   nsCString mURI;
   nsCString mQueryString;

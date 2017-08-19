@@ -83,6 +83,18 @@ interface nsIAbDirectory : nsIAbCollection {
   // list or not
   attribute boolean isMailList;
 
+  // Defines whether this directory can be deleteDirectory
+  readonly attribute boolean canDelete;
+
+  // Defines whether this directory is the personal address book
+  readonly attribute boolean isPersonal;
+
+  // Defines whether this directory is the collected address book
+  readonly attribute boolean isCollected;
+
+  // Defines whether this is the root directory
+  readonly attribute boolean isRoot;
+
   // Get the children directories
   readonly attribute nsISimpleEnumerator childNodes;
 
